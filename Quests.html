@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>KoH Quest Mapping</title>
+<style type="text/css">
+	.CurrentQuest { font-weight:bold; color:red;}
+</style>
+<script type="text/javascript">
+
+	class QuestAndTime 
+	{  
+		constructor(Name, EpochTime) {    this.Name = Name;    this.EpochTime = EpochTime;  }
+		//Method
+		setRow(tr)
+		{
+			if(tr!=undefined)
+			{
+				tr.innerHTML="";//clear it?
+				var newCell  = tr.insertCell(0);
+				newCell.innerHTML=new Date(this.EpochTime).toString();
+				newCell  = tr.insertCell(0);
+				newCell.innerHTML=this.Name;
+			}
+		}
+	} //end of class
+	
+	class Cycle
+	{
+		constructor(aryItems) {    this.aryCycle = aryItems;  }
+		//Method(s)
+		getAt(idx) { return this.aryCycle[idx]; } //unprotected?
+		findIDXOfValue(_value)
+		{
+			var retval=-1;//or -1??
+			for(var i=0;i<this.aryCycle.length;i++)
+			{
+				if(_value == this.aryCycle[i])			{				retval = i; break;			}
+			}
+			return retval;
+		}
+		MoveIDXForward(StartIDX, NumToMove)
+		{
+			var retval=0;
+			if(StartIDX >=0 && StartIDX < this.aryCycle.length)
+			{
+				NumToMove = (NumToMove % this.aryCycle.length);
+				retval=StartIDX;
+				for(var i=0; i<NumToMove;i++)
+				{
+					retval++;
+					if(retval > (this.aryCycle.length-1)){ retval=0; }
+				}
+			}
+			return retval;
+		}
+		MoveIDXBackward(StartIDX, NumToMove)
+		{
+			var retval=0;
+			if(StartIDX >=0 && StartIDX < this.aryCycle.length)
+			{
+				NumToMove = (NumToMove % this.aryCycle.length);
+				retval=StartIDX;
+				for(var i=0; i<NumToMove;i++)
+				{
+					retval--;
+					if(retval <0) { retval=(this.aryCycle.length-1); }
+				}
+			}
+			return retval;
+		}
+	} //end of class
+</script>
+<script type="text/javascript">
+	var tTimeUpdater=-1;
+	var OneHour = (60*60*1000);
+	var NumBack=2;
+	var NumForward=7;
+	//
+	var myQuests = new Cycle(["Construction", "Troop Training", "Monster Slaying", "Gathering", "Research", "Troop Training", "Monster Slaying","Might Growth", "Gathering", "Troop Training", "Monster Slaying"]);
+	var ConstKnownValue= new QuestAndTime("Research",1518789600000);//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
+	// "Might", 1518802310007 //fix for being on an hour interval
+	
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////	
+
+
+	//function GetHoursDiff(date1, date2)	{		return  Math.abs(date1 - date2) / 36e5;	}
+	function SE(strElementID, strHTMLValue)
+	{
+		var obj=document.getElementById(strElementID);
+		if(obj!=undefined && obj["innerHTML"] != undefined) 	{			obj.innerHTML=strHTMLValue;		}
+	}
+	function AppendRow(objQuestTime, AmICurrent)
+	{
+		var tblDerived = document.getElementById("tblDerived");
+		if(tblDerived!=undefined && objQuestTime!=undefined)
+		{
+			var newRow   = tblDerived.insertRow(tblDerived.rows.length);
+			if(AmICurrent==true){newRow.className ="CurrentQuest";}
+			objQuestTime. setRow(newRow);
+		}
+	}
+	
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+	
+	function UpdateUITimes()
+	{
+		var dtNow = new Date(); //dtNow = new Date(2018,1,16,9,0,0);
+		SE("lblClientTime",dtNow.toString());
+		SE("lblUTCTime",dtNow.toUTCString());
+	}	
+	
+	function SetPrevCurNextValues()
+	{
+		//so! search through aryCycle and find ConstKnownValue.Name
+		var KnownIDX=myQuests.findIDXOfValue(ConstKnownValue.Name);
+		if(KnownIDX!=-1)
+		{
+			var nowEpoch = new Date().getTime();
+			var Diff= nowEpoch - ConstKnownValue.EpochTime;			
+			var NumHours = Math.floor(Diff / OneHour);			
+			
+			var currentIDX = myQuests.MoveIDXForward(KnownIDX,NumHours);
+			var CurrentEpoch=(ConstKnownValue.EpochTime+(OneHour*NumHours));
+		
+			var UIStartEpoch =  CurrentEpoch - (NumBack*OneHour)
+			var UIStartIDX = myQuests.MoveIDXBackward(currentIDX,NumBack);
+			for(var i=0; i < (1+NumBack+NumForward);i++)
+			{
+				var qt = new QuestAndTime( myQuests.getAt(myQuests.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneHour));
+				AppendRow(qt, qt.EpochTime == CurrentEpoch);
+			}
+		}
+	}
+	function bodyLoad()
+	{
+		UpdateUITimes();
+		var trKnownValue = document.getElementById("trKnownValue");
+		if(trKnownValue!=undefined){	ConstKnownValue.setRow(trKnownValue);}
+		SetPrevCurNextValues();		
+		//tTimeUpdater = window.setInterval(function (){UpdateUITimes();}, 1000);
+	}
+	
+</script>
+</head>
+<body onload="bodyLoad();">
+	<table cellpadding="5" cellspacing="5" border="1px">
+		<tr><th>Local Time:</th><td><span id="lblClientTime"></span></td></tr>
+		<tr><th>UTC Time:</th><td><span id="lblUTCTime"></span></td></tr>
+	</table>
+	<br/>
+	<table cellpadding="5" cellspacing="5" border="1px">
+		<thead>
+			<tr><th colspan="2">Known Value</th><tr>
+			<tr id="trKnownValue"></tr>
+			<tr><td colspan="2" id="Scratch"></td></tr>
+		</thead>
+		<thead><tr><th>Quest Name</th><th>Quest Time</th></tr></thead>
+		
+		<tbody id="tblDerived">
+		</tbody>
+	</table>
+</body>
+</html>
