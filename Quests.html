@@ -9,6 +9,26 @@
 </style>
 <script type="text/javascript">
 
+	function GetSpanFromTimes(T1, T2)
+	{
+		var retval={'H':0, 'M':0, 'S':0, 'hasPassed':false };
+		retval["toString"]=function(){ return (this.hasPassed?"-":"")+ this.H+"h"+this.M+"m"+this.S+"s";}
+		var SecsPerHour=60*60;
+		var SecsPerMinute=60;
+		
+		var diff = T1  - T2;
+		var Seconds_from_T1_to_T2 = diff / 1000;
+		//now figure out H,M,S
+		retval["hasPassed"]=(Seconds_from_T1_to_T2<0);
+		var Multiplier=(Seconds_from_T1_to_T2<0)?-1.0:1.0;
+		var hold=Math.abs(Seconds_from_T1_to_T2);
+		if(retval.hasPassed==true){hold=hold-(5*SecsPerMinute);} else {hold=hold+(5*SecsPerMinute);}
+		while(hold>SecsPerHour)		{			retval.H++;			hold=hold-SecsPerHour;		}
+		while(hold>SecsPerMinute)		{			retval.M++;			hold=hold-SecsPerMinute;		}
+		while(hold>1)		{			retval.S++;			hold=hold-1;		}
+		
+		return retval;
+	}
 	class QuestAndTime 
 	{  
 		constructor(Name, EpochTime) {    this.Name = Name;    this.EpochTime = EpochTime;  }
@@ -18,9 +38,20 @@
 			if(tr!=undefined)
 			{
 				tr.innerHTML="";//clear it?
-				var newCell  = tr.insertCell(0);
+				var newCell;
+				newCell = tr.insertCell(0);//last
+				//var diff = new Date().getTime() - this.EpochTime;
+				//var Seconds_from_T1_to_T2 = dif / 1000;
+				
+				var oSpan = GetSpanFromTimes(	this.EpochTime, new Date().getTime());
+				//console.log(oSpan);
+				
+				//var strSpan=tspan.getHours()+"h"+tspan.getMinutes()+"m"+tspan.getSeconds()+"s";
+				var strSpan=oSpan.toString();
+				newCell.innerHTML=strSpan;
+				newCell = tr.insertCell(0);
 				newCell.innerHTML=new Date(this.EpochTime).toString();
-				newCell  = tr.insertCell(0);
+				newCell = tr.insertCell(0);
 				newCell.innerHTML=this.Name;
 			}
 		}
@@ -85,7 +116,15 @@
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////	
-
+	function getParameterByName(name, url) 
+	{
+	    if (!url) url = window.location.href;
+	    name = name.replace(/[\[\]]/g, "\\$&");
+	    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"), results = regex.exec(url);
+	    if (!results) return null;
+	    if (!results[2]) return '';
+	    return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
 
 	//function GetHoursDiff(date1, date2)	{		return  Math.abs(date1 - date2) / 36e5;	}
 	function SE(strElementID, strHTMLValue)
@@ -108,6 +147,13 @@
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 	
+	function tmTick()
+	{
+		UpdateUITimes();
+		var tblDerived = document.getElementById("tblDerived");
+		if(tblDerived!=undefined){tblDerived.innerHTML="";}
+		SetPrevCurNextValues();
+	}
 	function UpdateUITimes()
 	{
 		var dtNow = new Date(); //dtNow = new Date(2018,1,16,9,0,0);
@@ -142,8 +188,13 @@
 		UpdateUITimes();
 		var trKnownValue = document.getElementById("trKnownValue");
 		if(trKnownValue!=undefined){	ConstKnownValue.setRow(trKnownValue);}
-		SetPrevCurNextValues();		
-		//tTimeUpdater = window.setInterval(function (){UpdateUITimes();}, 1000);
+		SetPrevCurNextValues();
+		var oAutoUpdate=getParameterByName("AutoUpdate");
+		console.log(oAutoUpdate);
+		if(oAutoUpdate=="true")
+		{
+			tTimeUpdater = window.setInterval(function (){tmTick();}, 1000);
+		}
 	}
 	
 </script>
@@ -153,14 +204,15 @@
 		<tr><th>Local Time:</th><td><span id="lblClientTime"></span></td></tr>
 		<tr><th>UTC Time:</th><td><span id="lblUTCTime"></span></td></tr>
 	</table>
+<a href="?AutoUpdate=true">AutoUpdate</a> - <a href="?AutoUpdate=false">No AutoUpdate</a><br/>
 	<br/>
 	<table cellpadding="5" cellspacing="5" border="1px">
-		<thead>
-			<tr><th colspan="2">Known Value</th><tr>
+		<thead style="display:none;">
+			<tr><th colspan="3">Known Value</th><tr>
 			<tr id="trKnownValue"></tr>
 			<tr><td colspan="2" id="Scratch"></td></tr>
 		</thead>
-		<thead><tr><th>Quest Name</th><th>Quest Time</th></tr></thead>
+		<thead><tr><th>Quest Name</th><th>Quest Time</th><th>Start Time</th></tr></thead>
 		
 		<tbody id="tblDerived">
 		</tbody>
