@@ -22,7 +22,6 @@
 		retval["hasPassed"]=(Seconds_from_T1_to_T2<0);
 		var Multiplier=(Seconds_from_T1_to_T2<0)?-1.0:1.0;
 		var hold=Math.abs(Seconds_from_T1_to_T2);
-		if(retval.hasPassed==true){hold=hold-(5*SecsPerMinute);} else {hold=hold+(5*SecsPerMinute);}
 		while(hold>SecsPerHour)		{			retval.H++;			hold=hold-SecsPerHour;		}
 		while(hold>SecsPerMinute)		{			retval.M++;			hold=hold-SecsPerMinute;		}
 		while(hold>1)		{			retval.S++;			hold=hold-1;		}
@@ -42,8 +41,10 @@
 				newCell = tr.insertCell(0);//last
 				//var diff = new Date().getTime() - this.EpochTime;
 				//var Seconds_from_T1_to_T2 = dif / 1000;
-				
-				var oSpan = GetSpanFromTimes(	this.EpochTime, new Date().getTime());
+				var MilisPerMinute=(60*1000);
+				var StartTime = this.EpochTime + (5*MilisPerMinute);
+				console.log(MilisPerMinute);
+				var oSpan = GetSpanFromTimes(	StartTime, new Date().getTime());
 				//console.log(oSpan);
 				
 				//var strSpan=tspan.getHours()+"h"+tspan.getMinutes()+"m"+tspan.getSeconds()+"s";
@@ -190,7 +191,7 @@
 		if(trKnownValue!=undefined){	ConstKnownValue.setRow(trKnownValue);}
 		SetPrevCurNextValues();
 		var oAutoUpdate=getParameterByName("AutoUpdate");
-		console.log(oAutoUpdate);
+		//console.log(oAutoUpdate);
 		if(oAutoUpdate=="true")
 		{
 			tTimeUpdater = window.setInterval(function (){tmTick();}, 1000);
