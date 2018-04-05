@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>KoH Monster Brew</title>
+<meta charset="UTF-8">
+<meta name="author" content="KingPlater" />
+<meta name="description" content="https://daveplater.github.io/KoH/MonsterBrew.html" />
+<style type="text/css">
+	.CurrentQuest { font-weight:bold; color:red;}
+</style>
+<script type="text/javascript">
+
+var SlayerQuestMonsterHitValue=250; //per monster level
+var SlayerQuestMonsterKillValue=250; //per monster level
+var DragonQuestMonsterHitValue=3250; //per monster level
+var DragonQuestMonsterKillValue=16250; //per monster level
+	
+	function sHTML(strID,strHTML)
+	{
+		var o=document.getElementById(strID);
+		if(o!=undefined)		{			o.innerHTML=strHTML;		}
+	}
+	function sV(strID,strValue)
+	{
+		var o=document.getElementById(strID);
+		if(o!=undefined)		{			o.value=strValue;		}
+	}
+	function gCB(strID)
+	{
+		var retval=false;
+		var o=document.getElementById(strID);
+		if(o!=undefined)		{			retval=o.checked;		}
+		return retval;
+	}
+	function gV(strID)
+	{
+		var retval="";
+		var o=document.getElementById(strID);
+		if(o!=undefined)		{			retval=o.value;		}
+		return retval;
+	}
+	
+	function bodyLoad()
+	{
+		//TODO read from localStorage and get values
+		sHTML("lblMonsterHitValue",SlayerQuestMonsterHitValue+" points");
+		sHTML("lblMonsterKillValue",SlayerQuestMonsterKillValue+" points");
+	}
+	
+	function btCalculate_click()
+	{
+		var strResult="";
+		var iLevel=parseInt(gV("ddlMonsterLevel"));
+		var iHits=parseInt(gV("tbNumAttacks"));
+		var strBonus=gCB("cbKillAlsoGetsHit");
+		strResult+="Level: "+iLevel+", ";
+		strResult+="Hits: "+iHits+", ";
+		strResult+="Bonus: "+strBonus+"\r\n";
+		strResult+"\r\n";
+		var pts=(iLevel*SlayerQuestMonsterHitValue)*(iHits-1);
+		pts+=(iLevel*SlayerQuestMonsterKillValue);
+		if(strBonus==true)
+		{
+			pts+=(iLevel*SlayerQuestMonsterHitValue);
+		}
+		strResult+="Points: "+pts+"\r\n";
+		sV("tbOutput",strResult);
+	}
+	
+</script>
+</head>
+<body onload="bodyLoad();">
+	<table border="1" cellspacing="2" cellpadding="5">
+		<tbody id="tblSlayer">
+		<tr><th colspan="2">Slayer Quest </th></tr>
+		<tr><td width="50%">Per Hit Per Monster Level: </td><td id="lblMonsterHitValue"></td></tr>
+		<tr><td>Per Kill Per Monster Level: </td><td id="lblMonsterKillValue"></td></tr>
+	</tbody>
+</table>
+<br/>
+<div>
+	Monster Level:
+	<select id="ddlMonsterLevel">
+  	<option value="1">Level 1</option>
+  	<option value="2">Level 2</option>
+  	<option value="3">Level 3</option>
+  	<!-- -->
+  	<option value="4">Level 4</option>
+  	<option value="5">Level 5</option>
+  	<option value="6">Level 6</option>
+  	<!-- -->
+  	<option value="7">Level 7</option>
+  	<option value="8">Level 8</option>
+  	<option value="9">Level 9</option>  	
+	</select> 
+	<br/>
+	Number of Attacks: <input type="text" id="tbNumAttacks" /><br/>
+	<label>Does my last attack get points for kill AND hit? <input type="checkbox" id="cbKillAlsoGetsHit"/></label><br/>
+	<br/>
+	<button id="btCalculate" onclick="btCalculate_click()">Calculate</button>
+	<br/>
+	<br/>
+	<br/>
+	<textarea id="tbOutput" cols="48" rows="12"></textarea>
+</div>
+</body>
+</html>
