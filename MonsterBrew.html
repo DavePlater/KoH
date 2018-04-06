@@ -8,47 +8,115 @@
 	.CurrentQuest { font-weight:bold; color:red;}
 </style>
 <script type="text/javascript">
+var PointValues =
+{
+	SlayerQuest: {Name:"Slayer Quest", MonsterHit:250, MonsterKill:1250, TitanHit:1500, TitanKill:45000},
+	DailyClan:{Name:"Daily Clan Quest", MonsterHit:500, MonsterKill:2500, TitanHit:3000, TitanKill:90000},
+	AllYouCanSlay:{Name:"All You Can Slay Quest", MonsterHit:3250, MonsterKill:16250, TitanHit:19500, TitanKill:585000}
+};
+
+var oActivePointList=PointValues["SlayerQuest"];
 
 var SlayerQuestMonsterHitValue=250; //per monster level
-var SlayerQuestMonsterKillValue=250; //per monster level
-var DragonQuestMonsterHitValue=3250; //per monster level
-var DragonQuestMonsterKillValue=16250; //per monster level
+var SlayerQuestMonsterKillValue=1250; //per monster level
+
+	function sHTML(strID,strHTML)	{		var o=document.getElementById(strID);		if(o!=undefined)		{			o.innerHTML=strHTML;		}	}
+	function sCB(strID, bChecked){var o=document.getElementById(strID);		if(o!=undefined)		{	o.checked =bChecked;}	}
+	function sV(strID,strValue)	{		var o=document.getElementById(strID);		if(o!=undefined)		{			o.value=strValue;		}	}
+	function gCB(strID)	{		var retval=false;		var o=document.getElementById(strID);		if(o!=undefined)		{			retval=o.checked;		}		return retval;	}
+	function gV(strID)	{		var retval="";		var o=document.getElementById(strID);		if(o!=undefined)		{			retval=o.value;		}		return retval;	}
 	
-	function sHTML(strID,strHTML)
+	
+	function PointListToTable(strPointValueObjectName)
 	{
-		var o=document.getElementById(strID);
-		if(o!=undefined)		{			o.innerHTML=strHTML;		}
+		var oPointList = PointValues[strPointValueObjectName];
+		var tblPointListings=document.getElementById("tblPointListings");
+		if(tblPointListings!=undefined && oPointList!=undefined)
+		{
+			var str="";
+			str+="<tr><th colspan=\"3\">"+oPointList["Name"]+"</th><td><button onclick=\"btQuestSelect_Click('"+strPointValueObjectName+"')\">Select</button></td></tr>\r\n";
+			str+="<tr><th>Monster Hit</th><td>"+oPointList["MonsterHit"]+"</td>";
+			str+="<th>Monster Kill</th><td>"+oPointList["MonsterKill"]+"</td></tr>\r\n";
+			str+="<tr><th>Titan Hit</th><td>"+oPointList["TitanHit"]+"</td>";
+			str+="<th>Titan Kill</th><td>"+oPointList["TitanKill"]+"</td></tr>\r\n";
+			//var newRow   = tblDerived.insertRow(tblDerived.rows.length);
+			var newBody=document.createElement ("tbody");
+			newBody.id="tbody_"+strPointValueObjectName;
+			newBody.innerHTML=str;
+			tblPointListings.appendChild(newBody);
+			
+		}	
 	}
-	function sV(strID,strValue)
-	{
-		var o=document.getElementById(strID);
-		if(o!=undefined)		{			o.value=strValue;		}
+	
+	function btQuestSelect_Click(strPointValueObjectName)
+	{//this is a dumb way to do this:
+		
+		var oPointList = PointValues[strPointValueObjectName];
+		if(oPointList!=undefined)		{			oActivePointList=oPointList;		}
+
+		var tblPointListings=document.getElementById("tblPointListings");
+		if(tblPointListings!=undefined)
+		{
+			for(var i=0; i< tblPointListings.tBodies.length;i++ )
+			{
+				tblPointListings.tBodies[i].style.backgroundColor="white";
+			}
+		}
+		var tbody=document.getElementById("tbody_"+strPointValueObjectName);
+		if(tbody!=undefined)
+		{			
+			tbody.style.backgroundColor = "red";
+		}
+		localStorage.setItem("WhichQuest", strPointValueObjectName);
 	}
-	function gCB(strID)
+	function FillInFieldsFromStorage()
 	{
-		var retval=false;
-		var o=document.getElementById(strID);
-		if(o!=undefined)		{			retval=o.checked;		}
-		return retval;
+		//TODO read from localStorage and get values for the fields?
+		//sHTML("lblMonsterHitValue",SlayerQuestMonsterHitValue+" points");
+		//sHTML("lblMonsterKillValue",SlayerQuestMonsterKillValue+" points");
+		var strPointValueObjectName=(localStorage.getItem("WhichQuest")||"SlayerQuest");//default to SlayerQuest
+		var iLevel= (localStorage.getItem("MonsterLevel")||1);//default 1
+  	var iHits = (localStorage.getItem("NumberHits")||0);//default 0
+  	var bBonus = (localStorage.getItem("Bonus")||false);//default false
+  	sV("ddlMonsterLevel",iLevel);
+  	sV("tbNumAttacks",iHits);
+  	sCB("cbKillAlsoGetsHit",bBonus);
+		
+		btQuestSelect_Click(strPointValueObjectName); //Fake it till you make it
 	}
-	function gV(strID)
+	function SaveFieldsToStorage()
 	{
-		var retval="";
-		var o=document.getElementById(strID);
-		if(o!=undefined)		{			retval=o.value;		}
-		return retval;
+		//TODO save fields to localStorage
+		if (typeof(Storage) !== "undefined") 
+		{
+			var iLevel=parseInt(gV("ddlMonsterLevel"));
+			var iHits=parseInt(gV("tbNumAttacks"));
+			var bBonus=gCB("cbKillAlsoGetsHit");
+    	localStorage.setItem("MonsterLevel", iLevel);
+    	localStorage.setItem("NumberHits", iHits);
+    	localStorage.setItem("Bonus", bBonus);
+		} 
+		else 
+		{
+		    // Sorry! No Web Storage support..
+		}
 	}
 	
 	function bodyLoad()
 	{
-		//TODO read from localStorage and get values
-		sHTML("lblMonsterHitValue",SlayerQuestMonsterHitValue+" points");
-		sHTML("lblMonsterKillValue",SlayerQuestMonsterKillValue+" points");
+		PointListToTable("SlayerQuest");
+		PointListToTable("DailyClan");
+		PointListToTable("AllYouCanSlay");
+		FillInFieldsFromStorage();
+		
 	}
 	
 	function btCalculate_click()
 	{
+		SaveFieldsToStorage();
 		var strResult="";
+		var iMH=oActivePointList.MonsterHit;
+		var iMK=oActivePointList.MonsterKill;
 		var iLevel=parseInt(gV("ddlMonsterLevel"));
 		var iHits=parseInt(gV("tbNumAttacks"));
 		var strBonus=gCB("cbKillAlsoGetsHit");
@@ -56,11 +124,12 @@ var DragonQuestMonsterKillValue=16250; //per monster level
 		strResult+="Hits: "+iHits+", ";
 		strResult+="Bonus: "+strBonus+"\r\n";
 		strResult+"\r\n";
-		var pts=(iLevel*SlayerQuestMonsterHitValue)*(iHits-1);
-		pts+=(iLevel*SlayerQuestMonsterKillValue);
+		
+		var pts=(iLevel*iMH)*(iHits-1);
+		pts+=(iLevel*iMK);
 		if(strBonus==true)
 		{
-			pts+=(iLevel*SlayerQuestMonsterHitValue);
+			pts+=(iLevel*iMH);
 		}
 		strResult+="Points: "+pts+"\r\n";
 		sV("tbOutput",strResult);
@@ -69,15 +138,12 @@ var DragonQuestMonsterKillValue=16250; //per monster level
 </script>
 </head>
 <body onload="bodyLoad();">
-	<table border="1" cellspacing="2" cellpadding="5">
-		<tbody id="tblSlayer">
-		<tr><th colspan="2">Slayer Quest </th></tr>
-		<tr><td width="50%">Per Hit Per Monster Level: </td><td id="lblMonsterHitValue"></td></tr>
-		<tr><td>Per Kill Per Monster Level: </td><td id="lblMonsterKillValue"></td></tr>
-	</tbody>
-</table>
+	
+	<table id="tblPointListings" border="1" cellspacing="2" cellpadding="5">	</table>
+	
 <br/>
 <div>
+	
 	Monster Level:
 	<select id="ddlMonsterLevel">
   	<option value="1">Level 1</option>
