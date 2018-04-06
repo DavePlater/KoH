@@ -14,11 +14,7 @@ var PointValues =
 	DailyClan:{Name:"Daily Clan Quest", MonsterHit:500, MonsterKill:2500, TitanHit:3000, TitanKill:90000},
 	AllYouCanSlay:{Name:"All You Can Slay Quest", MonsterHit:3250, MonsterKill:16250, TitanHit:19500, TitanKill:585000}
 };
-
 var oActivePointList=PointValues["SlayerQuest"];
-
-var SlayerQuestMonsterHitValue=250; //per monster level
-var SlayerQuestMonsterKillValue=1250; //per monster level
 
 	function sHTML(strID,strHTML)	{		var o=document.getElementById(strID);		if(o!=undefined)		{			o.innerHTML=strHTML;		}	}
 	function sCB(strID, bChecked){var o=document.getElementById(strID);		if(o!=undefined)		{	o.checked =bChecked;}	}
@@ -35,58 +31,51 @@ var SlayerQuestMonsterKillValue=1250; //per monster level
 		{
 			var str="";
 			str+="<tr><th colspan=\"3\">"+oPointList["Name"]+"</th><td><button onclick=\"btQuestSelect_Click('"+strPointValueObjectName+"')\">Select</button></td></tr>\r\n";
-			str+="<tr><th>Monster Hit</th><td>"+oPointList["MonsterHit"]+"</td>";
-			str+="<th>Monster Kill</th><td>"+oPointList["MonsterKill"]+"</td></tr>\r\n";
-			str+="<tr><th>Titan Hit</th><td>"+oPointList["TitanHit"]+"</td>";
-			str+="<th>Titan Kill</th><td>"+oPointList["TitanKill"]+"</td></tr>\r\n";
-			//var newRow   = tblDerived.insertRow(tblDerived.rows.length);
+			str+="<tr><th>Monster Hit</th><td>"+oPointList["MonsterHit"]+"</td><th>Monster Kill</th><td>"+oPointList["MonsterKill"]+"</td></tr>\r\n";
+			str+="<tr><th>Titan Hit</th><td>"+oPointList["TitanHit"]+"</td><th>Titan Kill</th><td>"+oPointList["TitanKill"]+"</td></tr>\r\n";
 			var newBody=document.createElement ("tbody");
 			newBody.id="tbody_"+strPointValueObjectName;
 			newBody.innerHTML=str;
-			tblPointListings.appendChild(newBody);
-			
+			tblPointListings.appendChild(newBody);			
 		}	
+	}
+	
+	function ClearTBODYColors()
+	{
+		var tblPointListings=document.getElementById("tblPointListings");
+		if(tblPointListings!=undefined)
+		{
+			for(var i=0; i< tblPointListings.tBodies.length;i++ )			{				tblPointListings.tBodies[i].style.backgroundColor="white";			}
+		}
 	}
 	
 	function btQuestSelect_Click(strPointValueObjectName)
 	{//this is a dumb way to do this:
 		
 		var oPointList = PointValues[strPointValueObjectName];
-		if(oPointList!=undefined)		{			oActivePointList=oPointList;		}
-
-		var tblPointListings=document.getElementById("tblPointListings");
-		if(tblPointListings!=undefined)
-		{
-			for(var i=0; i< tblPointListings.tBodies.length;i++ )
-			{
-				tblPointListings.tBodies[i].style.backgroundColor="white";
-			}
-		}
+		if(oPointList!=undefined)		{			oActivePointList=oPointList;		localStorage.setItem("WhichQuest", strPointValueObjectName);	}
+		//
+		ClearTBODYColors();
 		var tbody=document.getElementById("tbody_"+strPointValueObjectName);
-		if(tbody!=undefined)
-		{			
-			tbody.style.backgroundColor = "red";
-		}
-		localStorage.setItem("WhichQuest", strPointValueObjectName);
+		if(tbody!=undefined)		{			tbody.style.backgroundColor = "red";		}
 	}
 	function FillInFieldsFromStorage()
 	{
-		//TODO read from localStorage and get values for the fields?
-		//sHTML("lblMonsterHitValue",SlayerQuestMonsterHitValue+" points");
-		//sHTML("lblMonsterKillValue",SlayerQuestMonsterKillValue+" points");
-		var strPointValueObjectName=(localStorage.getItem("WhichQuest")||"SlayerQuest");//default to SlayerQuest
-		var iLevel= (localStorage.getItem("MonsterLevel")||1);//default 1
-  	var iHits = (localStorage.getItem("NumberHits")||0);//default 0
-  	var bBonus = (localStorage.getItem("Bonus")||false);//default false
-  	sV("ddlMonsterLevel",iLevel);
-  	sV("tbNumAttacks",iHits);
-  	sCB("cbKillAlsoGetsHit",bBonus);
-		
-		btQuestSelect_Click(strPointValueObjectName); //Fake it till you make it
+		if (typeof(Storage) !== "undefined") 
+		{
+			var strPointValueObjectName=(localStorage.getItem("WhichQuest")||"SlayerQuest");//default to SlayerQuest
+			var iLevel= (localStorage.getItem("MonsterLevel")||1);//default 1
+	  	var iHits = (localStorage.getItem("NumberHits")||0);//default 0
+	  	var bBonus = (localStorage.getItem("Bonus")||false);//default false
+	  	sV("ddlMonsterLevel",iLevel);
+	  	sV("tbNumAttacks",iHits);
+	  	sCB("cbKillAlsoGetsHit",bBonus);
+	  	//		
+			btQuestSelect_Click(strPointValueObjectName); 
+		}
 	}
 	function SaveFieldsToStorage()
 	{
-		//TODO save fields to localStorage
 		if (typeof(Storage) !== "undefined") 
 		{
 			var iLevel=parseInt(gV("ddlMonsterLevel"));
@@ -107,8 +96,8 @@ var SlayerQuestMonsterKillValue=1250; //per monster level
 		PointListToTable("SlayerQuest");
 		PointListToTable("DailyClan");
 		PointListToTable("AllYouCanSlay");
-		FillInFieldsFromStorage();
-		
+		//
+		FillInFieldsFromStorage();		
 	}
 	
 	function btCalculate_click()
@@ -120,6 +109,7 @@ var SlayerQuestMonsterKillValue=1250; //per monster level
 		var iLevel=parseInt(gV("ddlMonsterLevel"));
 		var iHits=parseInt(gV("tbNumAttacks"));
 		var strBonus=gCB("cbKillAlsoGetsHit");
+		strResult+="["+oActivePointList.Name+"]\r\n";
 		strResult+="Level: "+iLevel+", ";
 		strResult+="Hits: "+iHits+", ";
 		strResult+="Bonus: "+strBonus+"\r\n";
