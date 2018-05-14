@@ -6,6 +6,7 @@
 <meta name="description" content="https://daveplater.github.io/KoH/MonsterBrew.html" />
 <style type="text/css">
 	.CurrentQuest { font-weight:bold; color:red;}
+	#tblQuestReqs td { text-align:center;}
 </style>
 <script type="text/javascript">
 
@@ -57,12 +58,14 @@ var oActivePointList=PointValues["SlayerQuest"];
 		{
 			while(tblQuestReqs.tBodies.length>0)			{				tblQuestReqs.removeChild(tblQuestReqs.tBodies[0]);			} //clear TBODIES
 			var str="";
-			str+="<tr><th>Bracket</th><td>"+oBracket["Min"]+"</td><td>"+oBracket["Max"]+"</td></tr>\r\n";
+			str+="<tr><th width=\"33%\">Bracket</th><td>"+oBracket["Min"]+"</td><td>"+oBracket["Max"]+"</td></tr>\r\n";
 			var oQuests=oBracket["Quests"];
 			for (var oQ in oQuests) 
 			{
 				str+="<tr><th colspan=\"3\">"+oQ+"</th></tr>\r\n";
-				str+="<tr><td>"+oQuests[oQ][0]+"</td><td>"+oQuests[oQ][1]+"</td><td>"+oQuests[oQ][2]+"</td></tr>\r\n";
+				if(oQuests[oQ].length==3)
+				{str+="<tr><td>"+oQuests[oQ][0].toLocaleString()+"</td><td>"+oQuests[oQ][1].toLocaleString()+"</td><td>"+oQuests[oQ][2].toLocaleString()+"</td></tr>\r\n";}
+				else {str+="<tr><td colspan=\"3\">??</td></tr>";}
   		}
 			var newBody=document.createElement ("tbody");
 			newBody.id="tbody_"+THLevelToGet;
@@ -199,7 +202,7 @@ var oActivePointList=PointValues["SlayerQuest"];
 			<td valign="top"><table id="tblPointListings" border="1" cellspacing="2" cellpadding="5">	</table></td>
 			<td valign="top">
 				
-				<table id="tblQuestReqs" border="1" cellspacing="2" cellpadding="5">	
+				<table id="tblQuestReqs" border="1" cellspacing="2" cellpadding="5" style="min-width:400px;">	
 					<thead>
 							<tr><th>TH</th><td colspan="2"><input type="text" id="tbTHNumber" /> <button id="btSetTH" onclick="btSetTHclick()">Set</button></td></tr>
 					</thead>
