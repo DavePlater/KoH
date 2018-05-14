@@ -10,14 +10,30 @@
 <script type="text/javascript">
 
 	// not to self: Include a table giving the "1/2/3 star" reqs for each quest in each bracket? hmm
-	// TH 23-25: { DragonQuest:[664000 , 1327000 , 4117000], SlayerQuest:[]	}
-	// TH 19-22: { DragonQuest:[371000, 882,000, 2540000], SlayerQuest:[]	}
-	// TH 16-18: { DragonQuest:[], SlayerQuest:[]	}
-	// TH 13-15: { DragonQuest:[240000,587000,882000], SlayerQuest:[]	}
-	// TH 10-12: { DragonQuest:[], SlayerQuest:[]	}
-	// TH 07-09: { DragonQuest:[], SlayerQuest:[]	}
-	// TH 04-06: { DragonQuest:[], SlayerQuest:[]	}
-	// TH 01-03: { DragonQuest:[], SlayerQuest:[]	}
+	// store what TH you want to "math" as and then you QuestReqs to look up?
+var QuestReqs = 
+{
+	THBrackets:
+	[ 
+		{Min:23, Max:25, Quests:{DragonQuest:[664000 , 1327000 , 4117000], SlayerQuest:[]} },
+		{Min:19, Max:22, Quests:{DragonQuest:[371000, 882,000, 2540000], SlayerQuest:[]}	},
+		{Min:16, Max:18, Quests:{DragonQuest:[324000,753000,2179000], SlayerQuest:[]}	},
+		{Min:13, Max:15, Quests:{DragonQuest:[240000,587000,882000], SlayerQuest:[]}	},
+		{Min:10, Max:12, Quests:{DragonQuest:[], SlayerQuest:[]}	},
+		{Min:07, Max:09, Quests:{DragonQuest:[], SlayerQuest:[]}	},
+		{Min:04, Max:06, Quests:{DragonQuest:[], SlayerQuest:[]}	},
+		{Min:01, Max:03, Quests:{DragonQuest:[], SlayerQuest:[]}	}
+	],
+	getBracket:function(THLevel) //loop through THBrackets and find where >=min and <= Max
+	{ 
+		var retval={};
+		var iTHLevel = parseInt(THLevel);
+		for(var i=0;i<this.THBrackets.length;i++)		{			if(iTHLevel >= this.THBrackets[i].Min && iTHLevel <= this.THBrackets[i].Max){retval=this.THBrackets[i]; break;}		}
+		return retval;
+	}
+	
+};
+
 var PointValues =
 {
 	SlayerQuest: {Name:"Slayer Quest", MonsterHit:250, MonsterKill:1250, TitanHit:1500, TitanKill:45000},
@@ -33,7 +49,28 @@ var oActivePointList=PointValues["SlayerQuest"];
 	function gCB(strID)	{		var retval=false;		var o=document.getElementById(strID);		if(o!=undefined)		{			retval=o.checked;		}		return retval;	}
 	function gV(strID)	{		var retval="";		var o=document.getElementById(strID);		if(o!=undefined)		{			retval=o.value;		}		return retval;	}
 	
-	
+	function QuestReqsToTable(THLevelToGet)
+	{
+		var oBracket=QuestReqs.getBracket(THLevelToGet);
+		var tblQuestReqs=document.getElementById("tblQuestReqs");
+		if(oBracket!=undefined) //it never should but whatever...
+		{
+			while(tblQuestReqs.tBodies.length>0)			{				tblQuestReqs.removeChild(tblQuestReqs.tBodies[0]);			} //clear TBODIES
+			var str="";
+			str+="<tr><th>Bracket</th><td>"+oBracket["Min"]+"</td><td>"+oBracket["Max"]+"</td></tr>\r\n";
+			var oQuests=oBracket["Quests"];
+			for (var oQ in oQuests) 
+			{
+				str+="<tr><th colspan=\"3\">"+oQ+"</th></tr>\r\n";
+				str+="<tr><td>"+oQuests[oQ][0]+"</td><td>"+oQuests[oQ][1]+"</td><td>"+oQuests[oQ][2]+"</td></tr>\r\n";
+  		}
+			var newBody=document.createElement ("tbody");
+			newBody.id="tbody_"+THLevelToGet;
+			newBody.innerHTML=str;
+			
+			tblQuestReqs.appendChild(newBody);			
+		}
+	}
 	function PointListToTable(strPointValueObjectName)
 	{
 		var oPointList = PointValues[strPointValueObjectName];
@@ -47,6 +84,7 @@ var oActivePointList=PointValues["SlayerQuest"];
 			var newBody=document.createElement ("tbody");
 			newBody.id="tbody_"+strPointValueObjectName;
 			newBody.innerHTML=str;
+			
 			tblPointListings.appendChild(newBody);			
 		}	
 	}
@@ -78,6 +116,8 @@ var oActivePointList=PointValues["SlayerQuest"];
 			var iLevel= (localStorage.getItem("MonsterLevel")||1);//default 1
 	  	var iHits = (localStorage.getItem("NumberHits")||0);//default 0
 	  	var bBonus = (localStorage.getItem("Bonus")||false);//default false
+	  	window.myTHLevel = (localStorage.getItem("THLevel")||15);//default 15
+	  	sV("tbTHNumber",window.myTHLevel);
 	  	sV("ddlMonsterLevel",iLevel);
 	  	sV("tbNumAttacks",iHits);
 	  	sCB("cbKillAlsoGetsHit",bBonus);
@@ -92,9 +132,11 @@ var oActivePointList=PointValues["SlayerQuest"];
 			var iLevel=parseInt(gV("ddlMonsterLevel"));
 			var iHits=parseInt(gV("tbNumAttacks"));
 			var bBonus=gCB("cbKillAlsoGetsHit");
+			var iTHLevel = (window.myTHLevel||15);
     	localStorage.setItem("MonsterLevel", iLevel);
     	localStorage.setItem("NumberHits", iHits);
     	localStorage.setItem("Bonus", bBonus);
+    	localStorage.setItem("THLevel", iTHLevel);
 		} 
 		else 
 		{
@@ -110,6 +152,8 @@ var oActivePointList=PointValues["SlayerQuest"];
 		PointListToTable("AllYouCanSlay");
 		//
 		FillInFieldsFromStorage();		
+		//
+		QuestReqsToTable(window.myTHLevel);
 	}
 	
 	function btCalculate_click()
@@ -135,13 +179,34 @@ var oActivePointList=PointValues["SlayerQuest"];
 		}
 		strResult+="Points: "+pts+"\r\n";
 		sV("tbOutput",strResult);
+
+		
+	}
+	function btSetTHclick()
+	{
+		var iTHNumber=parseInt(gV("tbTHNumber"));
+		window.myTHLevel=iTHNumber;
+		SaveFieldsToStorage();
+		QuestReqsToTable(window.myTHLevel);
 	}
 	
 </script>
 </head>
 <body onload="bodyLoad();">
 	
-	<table id="tblPointListings" border="1" cellspacing="2" cellpadding="5">	</table>
+	<table id="tblBig" border="0" cellspacing="2" cellpadding="5" >
+		<tr>
+			<td valign="top"><table id="tblPointListings" border="1" cellspacing="2" cellpadding="5">	</table></td>
+			<td valign="top">
+				
+				<table id="tblQuestReqs" border="1" cellspacing="2" cellpadding="5">	
+					<thead>
+							<tr><th>TH</th><td colspan="2"><input type="text" id="tbTHNumber" /> <button id="btSetTH" onclick="btSetTHclick()">Set</button></td></tr>
+					</thead>
+				</table>
+			</td>
+		</tr>
+	</table>
 	
 <br/>
 <div>
