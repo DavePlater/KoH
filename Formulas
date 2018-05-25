@@ -1,0 +1,83 @@
+<html>
+<head>
+<title>KoH Formulas</title>
+<meta charset="UTF-8">
+<meta name="author" content="KingPlater" />
+<meta name="description" content="https://daveplater.github.io/KoH/Quests.html" />
+<style type="text/css">
+	.CurrentQuest { font-weight:bold; color:red;}
+</style>
+<script type="text/javascript">
+
+//RealHospCap = Hospital Cap * (1.0+(BonusPercent/100.0))
+//Real Garrison = Garrison * (1.0+(BonusPercent/100.0))
+
+function sHTML(strID,strHTML)	{		var o=document.getElementById(strID);		if(o!=undefined)		{			o.innerHTML=strHTML;		}	}
+function sCB(strID, bChecked){var o=document.getElementById(strID);		if(o!=undefined)		{	o.checked =bChecked;}	}
+function sV(strID,strValue)	{		var o=document.getElementById(strID);		if(o!=undefined)		{			o.value=strValue;		}	}
+function gCB(strID)	{		var retval=false;		var o=document.getElementById(strID);		if(o!=undefined)		{			retval=o.checked;		}		return retval;	}
+function gV(strID)	{		var retval="";		var o=document.getElementById(strID);		if(o!=undefined)		{			retval=o.value;		}		return retval;	}
+
+function Rounder(dVal, iDigits)	
+{
+	var iPow10=Math.pow(10,iDigits);
+	return Math.round(dVal * iPow10) / iPow10;
+}
+
+function ComputeAdjusted(dCap,dCapBonusPercent){	return dCap *  (1.0+(dCapBonusPercent/100.0));	}
+
+function bodyLoad()
+{
+	sV("tbHospitalCap","");
+	sV("tbHospitalCapBonusPercent","");
+	sHTML("lblHospitalCapResults","");
+	
+	ComputeEnergyRegen();
+}
+
+function ComputeIt(strCapID, strCapBonusID, strResultsID, dExtraBonusPercent)
+{
+	var BaseValue = parseFloat(gV(strCapID));
+	var BonusPercent = parseFloat(gV(strCapBonusID));
+	var ExtraBonusPercent=parseFloat(dExtraBonusPercent+"");
+	if(!isNaN(ExtraBonusPercent)){	BonusPercent=BonusPercent+ExtraBonusPercent;	}
+	var FullValue=ComputeAdjusted(BaseValue,BonusPercent);
+	var strResult="";
+	if(!isNaN(FullValue)){	strResult+=Rounder(FullValue,3)+"";}
+	sHTML(strResultsID,strResult);
+}
+function ComputeEnergyRegen()
+{
+	var Bonus=0.0;	
+	if(gCB("cbEnergyBonusFromShrine",false)==true){Bonus=20.0;}
+	ComputeIt("tbEnergyRegen","tbEnergyRegenBonusPercent","lblEnergyRegenResults",Bonus);	
+}
+function ComputeHospitalCap(){	ComputeIt("tbHospitalCap","tbHospitalCapBonusPercent","lblHospitalCapResults");	}
+function ComputeHospitalCap_old()
+{
+	var HospitalCap = parseFloat(gV("tbHospitalCap"));
+	var HospitalCapBonusPercent = parseFloat(gV("tbHospitalCapBonusPercent"));
+	var HospitalCapFull=ComputeAdjusted(HospitalCap,HospitalCapBonusPercent);
+	var strResult="";
+	if(!isNaN(HospitalCapFull)){	strResult+=Rounder(HospitalCapFull,3)+"k";}
+	sHTML("lblHospitalCapResults",strResult);
+}
+
+</script>
+</head>
+<body onload="bodyLoad();">
+<table cellpadding="5" cellspacing="5" border="1px">
+	<tr><th colspan="2">Hospital Cap</th</tr>
+	<tr><th>Cap:</th><td><input type="text" id="tbHospitalCap" 	onchange  = "ComputeHospitalCap();"	onkeypress = "this.onchange();"	onpaste    = "this.onchange();"oninput    = "this.onchange();" />k</td></tr>
+	<tr><th>Bonus:</th><td><input type="text" id="tbHospitalCapBonusPercent" 	onchange  = "ComputeHospitalCap();"	onkeypress = "this.onchange();"	onpaste = "this.onchange();"	oninput = "this.onchange();" />%</td></tr>
+	<tr><th>Hospital Cap:</th><td><span id="lblHospitalCapResults"></span>k</td></tr>
+</body>
+<br/>
+<table cellpadding="5" cellspacing="5" border="1px">
+	<tr><th colspan="2">Energy Regen</th</tr>
+	<tr><th>Regen:</th><td><input type="text" id="tbEnergyRegen" 	onchange  = "ComputeEnergyRegen();"	onkeypress = "this.onchange();"	onpaste    = "this.onchange();"oninput    = "this.onchange();" value="0.6"/>/min</td></tr>
+	<tr><th>Bonus:</th><td><input type="text" id="tbEnergyRegenBonusPercent" 	onchange  = "ComputeEnergyRegen();"	onkeypress = "this.onchange();"	onpaste = "this.onchange();"	oninput = "this.onchange();" value="0.0"/>%</td></tr>
+	<tr><th colspan="2">Shrine Bonus? <input type="checkbox" id="cbEnergyBonusFromShrine" onclick="ComputeEnergyRegen();"/></th>
+	<tr><th>Total:</th><td><span id="lblEnergyRegenResults"></span>/min</td></tr>
+</body>
+</html>
