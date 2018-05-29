@@ -94,7 +94,7 @@ function ComputePrrotectedTroopCap()
 	var dTotalGarrison =parseFloat(gHTML("lblGarrisonCapResults"));
 	if( (!isNaN(dTotalHospital)) && (!isNaN(dTotalGarrison)) )
 	{
-		sHTML("lblTotalProtectedTroops", Rounder(dTotalHospital+dTotalGarrison,3)+"k");
+		sHTML("lblTotalProtectedTroops", Rounder(dTotalHospital+dTotalGarrison,3)+"");
 	}	
 }
 function ComputeHospitalCap_old()
