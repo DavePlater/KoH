@@ -137,7 +137,7 @@ function ComputeHospitalCap_old()
 					<tr><th colspan="2">Energy Regen</th</tr>
 					<tr><th>Regen:</th><td><input type="text" id="tbEnergyRegen" 	onchange  = "ComputeEnergyRegen();"	onkeypress = "this.onchange();"	onpaste    = "this.onchange();"oninput    = "this.onchange();" value="0.6"/>/min</td></tr>
 					<tr><th>Bonus:</th><td><input type="text" id="tbEnergyRegenBonusPercent" 	onchange  = "ComputeEnergyRegen();"	onkeypress = "this.onchange();"	onpaste = "this.onchange();"	oninput = "this.onchange();" value="0.0"/>%</td></tr>
-					<tr><th colspan="2">20% Ruler Decree Bonus? <input type="checkbox" id="cbEnergyBonusFromRulerDecree" onclick="ComputeEnergyRegen();"/></th>
+					<tr><th colspan="2">(20%) Ruler Decree <b>Growth</b>? <input type="checkbox" id="cbEnergyBonusFromRulerDecree" onclick="ComputeEnergyRegen();"/></th>
 					<tr><th>Total:</th><td><span id="lblEnergyRegenResults"></span>/min</td></tr>
 				</table>
 			</td>
