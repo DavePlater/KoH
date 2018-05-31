@@ -7,7 +7,7 @@
 <style type="text/css">
 	.CurrentQuest { font-weight:bold; color:red;}
 </style>
-<script type="text/javascript" src="Character.js"></script>
+<script type="text/javascript" src="./Character.js"></script>
 <script type="text/javascript">
 	
 	function FillInCharacterList()
@@ -16,20 +16,42 @@
 		if(ddlCharacterList!=undefined)
 		{
 			var aryCharacterNames=GetCharacterNames();
+			console.log("NumChars="+aryCharacterNames.length);
 			for(var i=0;i<aryCharacterNames.length;i++)
 			{
-				ddlCharacterList.add(aryCharacterNames[i]);
+				console.log(aryCharacterNames[i]);
+				var o=document.createElement("option");
+				o.text=aryCharacterNames[i];
+				ddlCharacterList.add(o);
 			}
 		}
 	}
 	function body_onload()
 	{
 		LoadAllCharacters();
+		FillInCharacterList();
 	}
+	
+	function ddlCharacterList_onchange()
+	{
+		var ddlCharacterList= document.getElementById("ddlCharacterList"); //could i just pass "this" into the function??
+		if(ddlCharacterList!=undefined)
+		{
+			var idx=ddlCharacterList.selectedIndex;
+			if(idx>-1)
+			{
+				var CharacterName=ddlCharacterList.options[ddlCharacterList.selectedIndex].text;
+				console.log("["+ddlCharacterList.selectedIndex+"] "+CharacterName);
+			}
+		}
+	}
+	
 </script>
 </head>
-<body onload="body_onload();>
-	Characters: <select id="ddlCharacterList" size="5" onselect></select><br/>
+<body onload="body_onload();" >
+	<div align="top" style="display: flex; align-items:top;" >
+		Characters: &nbsp;<select id="ddlCharacterList" size="3" style="width:200px;" onchange="ddlCharacterList_onchange()"></select>
+	</div>
 	
 </body>
 </html>
