@@ -8,7 +8,6 @@
 	.CurrentQuest { font-weight:bold; color:red;}
 	#tblQuestReqs td { text-align:center;}
 </style>
-<script type="text/javascript" src="Character.js"></script>
 <script type="text/javascript">
 
 
@@ -168,8 +167,6 @@ var oActivePointList=PointValues["SlayerQuest"];
 		//
 		var iTHLevel = (localStorage.getItem("THLevel")||15);//default 15
 		QuestReqsToTable(iTHLevel);
-		AddCharacter("KingPlater",24);
-		SaveAllCharacters();
 	}
 	
 	function ComputeNumberForStars(pts)
