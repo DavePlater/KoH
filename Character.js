@@ -32,11 +32,11 @@ function GetCharacterNames()
 }
 function SaveAllCharacters()
 {
-	localStorage.setItem("oCharacters", oCharacters);
+	localStorage.setItem("oCharacters", JSON.stringify(oCharacters));
 }
 function LoadAllCharacters()
 {
-	oCharacters = (localStorage.getItem("oCharacters")||{});
+	oCharacters = JSON.parse(localStorage.getItem("oCharacters")||"{}");
 }
 
 /*
