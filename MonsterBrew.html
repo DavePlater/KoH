@@ -11,8 +11,7 @@
 <script type="text/javascript" src="Character.js"/>
 <script type="text/javascript">
 
-AddCharacter("KingPlater",24);
-SaveAllCharacters();
+
 
 var QuestReqs = 
 {
@@ -169,6 +168,8 @@ var oActivePointList=PointValues["SlayerQuest"];
 		//
 		var iTHLevel = (localStorage.getItem("THLevel")||15);//default 15
 		QuestReqsToTable(iTHLevel);
+		AddCharacter("KingPlater",24);
+		SaveAllCharacters();
 	}
 	
 	function ComputeNumberForStars(pts)
