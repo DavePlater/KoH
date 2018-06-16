@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>RSS Tally</title>
+<meta charset="UTF-8">
+<meta name="author" content="KingPlater" />
+<meta name="description" content="https://daveplater.github.io/KoH/" />
+<style type="text/css"></style>
+<script type="text/javascript">
+//
+function sHTML(strID,strHTML)	{		var o=document.getElementById(strID);		if(o!=undefined)		{			o.innerHTML=strHTML;		}	}
+function sCB(strID, bChecked){var o=document.getElementById(strID);		if(o!=undefined)		{	o.checked =bChecked;}	}
+function sV(strID,strValue)	{		var o=document.getElementById(strID);		if(o!=undefined)		{			o.value=strValue;		}	}
+//
+function gHTML(strID)	{		var retval="";			var o=document.getElementById(strID);		if(o!=undefined)		{			retval=o.innerHTML;		}		return retval;	}
+function gCB(strID)		{		var retval=false;		var o=document.getElementById(strID);		if(o!=undefined)		{			retval=o.checked;		}		return retval;	}
+function gV(strID)		{		var retval="";			var o=document.getElementById(strID);		if(o!=undefined)		{			retval=o.value;		}		return retval;	}
+//
+//https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+const numberWithCommas = (x) => {  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+
+var arySizes=[500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000,2500000,5000000];
+
+function ValuesChanged()
+{
+	var iTotal=0;
+	for(var i=0;i<arySizes.length;i++)
+	{
+		var iSize=arySizes[i];
+		var iVal=parseInt(gV("tb"+iSize));
+		var iSizeTotal=(!isNaN(iVal))?(iVal*iSize):0;		
+		sHTML("lblTotal"+iSize,numberWithCommas(iSizeTotal)+"");
+		iTotal+=iSizeTotal;
+	}	
+	sHTML("lblTotal",numberWithCommas(iTotal));
+}
+function BuildTable(strRSSName)//ignore name for now
+{
+	var str="";
+	for(var i=0;i<arySizes.length;i++)
+	{
+		var iSize=arySizes[i];
+		str+="<tr><th>"+numberWithCommas(iSize)+"</th><td><input id=\"tb"+iSize+"\" onkeyup=\"ValuesChanged();\" /></td><td><span id=\"lblTotal"+iSize+"\"></span></td></tr>";
+	}
+	sHTML("tblRSS",str);
+}
+
+function body_onload()
+{
+	BuildTable("Ore");
+}
+</script>
+</head>
+<body onload="body_onload();">
+
+	<table id="tblAll" cellpadding="5" cellspacing="2" border="1">
+		<tr><th>Total</th><td colspan="2"><span id="lblTotal">&nbsp;</span></td></tr>
+		<tr><th>Value</th><th>Amount</th><th>Total</th></tr>
+		<tbody id="tblRSS"></tbody>
+	</table>
+</body>
+</html>
