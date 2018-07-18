@@ -6,6 +6,8 @@
 <meta name="description" content="https://daveplater.github.io/KoH/Quests.html" />
 <style type="text/css">
 	.CurrentQuest { font-weight:bold; color:red;}
+	.PastQuest { font-weight:bold; color:brown;}
+	.FutureQuest { font-weight:bold; color:Green;}	
 </style>
 <script type="text/javascript">
 
@@ -133,13 +135,15 @@
 		var obj=document.getElementById(strElementID);
 		if(obj!=undefined && obj["innerHTML"] != undefined) 	{			obj.innerHTML=strHTMLValue;		}
 	}
-	function AppendRow(objQuestTime, AmICurrent)
+	function AppendRow(objQuestTime, RowMarker)
 	{
 		var tblDerived = document.getElementById("tblDerived");
 		if(tblDerived!=undefined && objQuestTime!=undefined)
 		{
 			var newRow   = tblDerived.insertRow(tblDerived.rows.length);
-			if(AmICurrent==true){newRow.className ="CurrentQuest";}
+			if(RowMarker==0){newRow.className ="CurrentQuest";}
+			else if(RowMarker==-1){newRow.className ="PastQuest";}
+			else if(RowMarker==1){newRow.className ="FutureQuest";}
 			objQuestTime. setRow(newRow);
 		}
 	}
@@ -161,7 +165,14 @@
 		SE("lblClientTime",dtNow.toString());
 		SE("lblUTCTime",dtNow.toUTCString());
 	}	
-	
+	function CompareTo(tm1, tm2)
+	{
+		var retval = 0;//they are equal
+		if(tm1==tm2){retval=0;}
+		else if(tm1<tm2){retval=-1;}
+		else if(tm1>tm2){retval=1;}
+		
+	}
 	function SetPrevCurNextValues()
 	{
 		//so! search through aryCycle and find ConstKnownValue.Name
@@ -180,7 +191,10 @@
 			for(var i=0; i < (1+NumBack+NumForward);i++)
 			{
 				var qt = new QuestAndTime( myQuests.getAt(myQuests.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneHour));
-				AppendRow(qt, qt.EpochTime == CurrentEpoch);
+				//var AmIOld = qt.EpochTime < CurrentEpoch; //-1
+				//var AmICurrent = qt.EpochTime == CurrentEpoch;//0
+				//var AmIFuture = qt.EpochTime > CurrentEpoch;//1
+				AppendRow(qt, CompareTo(qt.EpochTime, CurrentEpoch) );
 			}
 		}
 	}
