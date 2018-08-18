@@ -19,21 +19,24 @@ function gV(strID)		{		var retval="";			var o=document.getElementById(strID);		i
 const numberWithCommas = (x) => {  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 function MinsToNice(iMins)
 {
-		var retval={'D':0, 'H':0, 'M':0, };
+		var retval={'Y': 0, 'D':0, 'H':0, 'M':0, };//Year is tricky because it is like 365.25 or something, but unlikely to have 4 years saved up
 		retval["toString"]=function()
 		{ 
 			var retval="";
 			var DoINeedAComma=false;
-			if(this.D>0){ retval+=this.D+" Days"; DoINeedAComma=true;}
-			if(this.H>0){ if(DoINeedAComma){retval+=", ";} retval+=this.H+" Hours"; DoINeedAComma=true;}
-			if(this.M>0){ if(DoINeedAComma){retval+=", ";} retval+=this.M+" Mins";}
+			if(this.Y>0){ if(DoINeedAComma){retval+=", ";} retval+=this.Y+" Years"; DoINeedAComma=true; }
+			if(this.D>0){ if(DoINeedAComma){retval+=", ";} retval+=this.D+" Days";  DoINeedAComma=true; }
+			if(this.H>0){ if(DoINeedAComma){retval+=", ";} retval+=this.H+" Hours"; DoINeedAComma=true; }
+			if(this.M>0){ if(DoINeedAComma){retval+=", ";} retval+=this.M+" Mins";  DoINeedAComma=true; }
 			return retval;
 		}
 		
 		var MinsPerHour=60*1;
 		var MinsPerDay=1*24*60;
+		var MinsPerYear=1*365*24*60;
 		
 		var iTemp=iMins;
+		while(iTemp>=MinsPerYear){retval.Y++; iTemp=iTemp-MinsPerYear;}
 		while(iTemp>=MinsPerDay){retval.D++; iTemp=iTemp-MinsPerDay;}
 		while(iTemp>=MinsPerHour){retval.H++; iTemp=iTemp-MinsPerHour;}
 		retval.M=iTemp;
