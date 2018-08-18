@@ -17,46 +17,109 @@ function gV(strID)		{		var retval="";			var o=document.getElementById(strID);		i
 //
 //https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
 const numberWithCommas = (x) => {  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+function MinsToNice(iMins)
+{
+		var retval={'D':0, 'H':0, 'M':0, };
+		retval["toString"]=function()
+		{ 
+			var retval="";
+			var DoINeedAComma=false;
+			if(this.D>0){ retval+=this.D+" Days"; DoINeedAComma=true;}
+			if(this.H>0){ if(DoINeedAComma){retval+=", ";} retval+=this.H+" Hours"; DoINeedAComma=true;}
+			if(this.M>0){ if(DoINeedAComma){retval+=", ";} retval+=this.M+" Mins";}
+			return retval;
+		}
+		
+		var MinsPerHour=60*1;
+		var MinsPerDay=1*24*60;
+		
+		var iTemp=iMins;
+		while(iTemp>=MinsPerDay){retval.D++; iTemp=iTemp-MinsPerDay;}
+		while(iTemp>=MinsPerHour){retval.H++; iTemp=iTemp-MinsPerHour;}
+		retval.M=iTemp;
+		
+		return retval.toString();
+}
 
+var arySizesRSS=[500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000,2500000,5000000];
+var arySizesSpeedUps=[1,5,15,60,	3*60, 8*60, 24*60, 	3*24*60, 7*24*60, 30*24*60];
 
-var arySizes=[500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000,2500000,5000000];
-
-function ValuesChanged()
+function ValuesChangedRSS()
 {
 	var iTotal=0;
-	for(var i=0;i<arySizes.length;i++)
+	for(var i=0;i<arySizesRSS.length;i++)
 	{
-		var iSize=arySizes[i];
-		var iVal=parseInt(gV("tb"+iSize));
+		var iSize=arySizesRSS[i];
+		var iVal=parseInt(gV("tbRSS"+iSize));
 		var iSizeTotal=(!isNaN(iVal))?(iVal*iSize):0;		
-		sHTML("lblTotal"+iSize,numberWithCommas(iSizeTotal)+"");
+		sHTML("lblTotalRSS"+iSize,numberWithCommas(iSizeTotal)+"");
 		iTotal+=iSizeTotal;
 	}	
-	sHTML("lblTotal",numberWithCommas(iTotal));
+	sHTML("lblTotalRSS",numberWithCommas(iTotal));
 }
-function BuildTable(strRSSName)//ignore name for now
+function BuildTableRSS(strRSSName)//ignore name for now
 {
 	var str="";
-	for(var i=0;i<arySizes.length;i++)
+	for(var i=0;i<arySizesRSS.length;i++)
 	{
-		var iSize=arySizes[i];
-		str+="<tr><th>"+numberWithCommas(iSize)+"</th><td><input id=\"tb"+iSize+"\" onkeyup=\"ValuesChanged();\" /></td><td><span id=\"lblTotal"+iSize+"\"></span></td></tr>";
+		var iSize=arySizesRSS[i];
+		str+="<tr><th>"+numberWithCommas(iSize)+"</th><td><input id=\"tbRSS"+iSize+"\" onkeyup=\"ValuesChangedRSS();\" /></td><td><span id=\"lblTotalRSS"+iSize+"\"></span></td></tr>";
 	}
 	sHTML("tblRSS",str);
 }
 
+function ValuesChangedSpeedUp()
+{
+	//lblTotalSpeedUp
+	var iTotal=0;
+	for(var i=0;i<arySizesSpeedUps.length;i++)
+	{
+		var iSize=arySizesSpeedUps[i];
+		var iVal=parseInt(gV("tbSpeedUp"+iSize));
+		console.log("iSize="+iSize+"*"+iVal+"=");
+		var iSizeTotal=(!isNaN(iVal))?(iVal*iSize):0;		
+		sHTML("lblTotalSpeedUp"+iSize,MinsToNice(iSizeTotal)+"");
+		iTotal+=iSizeTotal;
+	}	
+	sHTML("lblTotalSpeedUp",MinsToNice(iTotal));
+}
+function BuildTableSpeedUp()
+{
+	var str="";
+	for(var i=0;i<arySizesSpeedUps.length;i++)
+	{
+		var iSize=arySizesSpeedUps[i];
+		str+="<tr><th>"+MinsToNice(iSize)+"</th><td><input id=\"tbSpeedUp"+iSize+"\" onkeyup=\"ValuesChangedSpeedUp();\" /></td><td><span id=\"lblTotalSpeedUp"+iSize+"\"></span></td></tr>";
+	}
+	sHTML("tblSpeedUp",str);
+}
+
 function body_onload()
 {
-	BuildTable("Ore");
+	BuildTableRSS("Ore");
+	BuildTableSpeedUp();
 }
 </script>
 </head>
 <body onload="body_onload();">
-
+<table>
+<tr><th>RSS</th><th>SpeedUps</th></tr>
+<tr valign="top">
+<td>
 	<table id="tblAll" cellpadding="5" cellspacing="2" border="1">
-		<tr><th>Total</th><td colspan="2"><span id="lblTotal">&nbsp;</span></td></tr>
+		<tr><th>Total</th><td colspan="2"><span id="lblTotalRSS">&nbsp;</span></td></tr>
 		<tr><th>Value</th><th>Amount</th><th>Total</th></tr>
 		<tbody id="tblRSS"></tbody>
 	</table>
+</td>
+<td>
+	<table id="tblAll2" cellpadding="5" cellspacing="2" border="1">
+		<tr><th>Total</th><td colspan="2"><span id="lblTotalSpeedUp">&nbsp;</span></td></tr>
+		<tr><th>Value</th><th>Amount</th><th>Total</th></tr>
+		<tbody id="tblSpeedUp"></tbody>
+	</table>
+</td>
+</tr>
+</table>
 </body>
 </html>
