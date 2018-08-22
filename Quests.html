@@ -45,7 +45,7 @@
 				//var Seconds_from_T1_to_T2 = dif / 1000;
 				var MilisPerMinute=(60*1000);
 				var StartTime = this.EpochTime + (5*MilisPerMinute);
-				console.log(MilisPerMinute);
+				//console.log(MilisPerMinute);
 				var oSpan = GetSpanFromTimes(	StartTime, new Date().getTime());
 				//console.log(oSpan);
 				
@@ -110,7 +110,7 @@
 	var tTimeUpdater=-1;
 	var OneHour = (60*60*1000);
 	var NumBack=3;
-	var NumForward=8;
+	var NumForward=11;
 	//
 	var myQuests = new Cycle(["Construction", "Troop Training", "Monster Slaying", "Gathering", "Research", "Troop Training", "Monster Slaying","Might Growth", "Gathering", "Troop Training", "Monster Slaying"]);
 	var ConstKnownValue= new QuestAndTime("Research",1518789600000);//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
