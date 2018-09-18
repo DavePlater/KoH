@@ -86,6 +86,17 @@ function ComputeEnergyRegen()
 	if(gCB("cbEnergyBonusFromRulerDecree",false)==true){Bonus=20.0;}
 	ComputeIt("tbEnergyRegen","tbEnergyRegenBonusPercent","lblEnergyRegenResults",Bonus);	
 }
+function ComputeAllyValue()
+{
+	var fPrice= parseFloat(gV("tbAllyPrice"));
+	var fGrass= parseFloat(gV("tbAllyGrasslands"));
+	var fBad= parseFloat(gV("tbAllyBadlands"));
+	var fSwamp= parseFloat(gV("tbAllySwamplands"));
+	var fTotalPercent=fGrass+fBad+fSwamp;
+	var fCostPerPercent=fPrice/fTotalPercent;
+	sHTML("lblAllyTotalPercent", (isNaN(fTotalPercent)?"":Rounder(fTotalPercent,3)+"")); }
+	sHTML("lblAllyCostPerPoint", (isNaN(fCostPerPercent)?"":Rounder(fCostPerPercent,3)+"")); }
+}
 function ComputeHospitalCap(){	var res=ComputeIt("tbHospitalCap","tbHospitalCapBonusPercent","lblHospitalCapResults");	ComputePrrotectedTroopCap();	SaveToStore();	}
 function ComputeGarrisonCap(){	var res=ComputeIt("tbGarrisonCap","tbGarrisonCapBonusPercent","lblGarrisonCapResults");	ComputePrrotectedTroopCap();	SaveToStore();	}
 function ComputePrrotectedTroopCap()
@@ -134,12 +145,23 @@ function ComputeHospitalCap_old()
 		<tr>
 			<td>
 				<table cellpadding="5" cellspacing="5" border="1px">
-					<tr><th colspan="2">Energy Regen</th</tr>
+					<tr><th colspan="2">Energy Regen</th></tr>
 					<tr><th>Regen:</th><td><input type="text" id="tbEnergyRegen" 	onchange  = "ComputeEnergyRegen();"	onkeypress = "this.onchange();"	onpaste    = "this.onchange();"oninput    = "this.onchange();" value="0.6"/>/min</td></tr>
 					<tr><th>Bonus:</th><td><input type="text" id="tbEnergyRegenBonusPercent" 	onchange  = "ComputeEnergyRegen();"	onkeypress = "this.onchange();"	onpaste = "this.onchange();"	oninput = "this.onchange();" value="0.0"/>%</td></tr>
 					<tr><th colspan="2">(20%) Ruler Decree <b>Growth</b>? <input type="checkbox" id="cbEnergyBonusFromRulerDecree" onclick="ComputeEnergyRegen();"/></th>
 					<tr><th>Total:</th><td><span id="lblEnergyRegenResults"></span>/min</td></tr>
 				</table>
+			</td>
+			<td>
+				<table cellpadding="5" cellspacing="5" border="1px">
+					<tr><th colspan="2">Ally Value</th></tr>
+					<tr><th>Price:</th><td><input type="text" id="tbAllyPrice" onchange="ComputeAllyValue();" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /></td></tr>
+					<tr><td colspan="2"></td></tr>
+					<tr><th>Grasslands:</th><td><input type="text" id="tbAllyGrasslands" onchange="ComputeAllyValue();" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /></td></tr>
+					<tr><th>Badlands:</th><td><input type="text" id="tbAllyBadlands" onchange="ComputeAllyValue();" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /></td></tr>
+					<tr><th>Swamplands:</th><td><input type="text" id="tbAllySwamplands" onchange="ComputeAllyValue();" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /></td></tr>
+					<tr><th>Total %s:</th><td><span id="lblAllyTotalPercent"></span></td></tr>
+					<tr><th>Gold/Point: </th><td><span id="lblAllyCostPerPoint"></span></td></tr>
 			</td>
 		</tr>
 	</table>
