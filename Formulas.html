@@ -94,8 +94,8 @@ function ComputeAllyValue()
 	var fSwamp= parseFloat(gV("tbAllySwamplands"));
 	var fTotalPercent=fGrass+fBad+fSwamp;
 	var fCostPerPercent=fPrice/fTotalPercent;
-	sHTML("lblAllyTotalPercent", (isNaN(fTotalPercent)?"":Rounder(fTotalPercent,3)+"")); }
-	sHTML("lblAllyCostPerPoint", (isNaN(fCostPerPercent)?"":Rounder(fCostPerPercent,3)+"")); }
+	sHTML("lblAllyTotalPercent", (isNaN(fTotalPercent)?"":Rounder(fTotalPercent,3)+"")); 
+	sHTML("lblAllyCostPerPoint", (isNaN(fCostPerPercent)?"":Rounder(fCostPerPercent,3)+"")); 
 }
 function ComputeHospitalCap(){	var res=ComputeIt("tbHospitalCap","tbHospitalCapBonusPercent","lblHospitalCapResults");	ComputePrrotectedTroopCap();	SaveToStore();	}
 function ComputeGarrisonCap(){	var res=ComputeIt("tbGarrisonCap","tbGarrisonCapBonusPercent","lblGarrisonCapResults");	ComputePrrotectedTroopCap();	SaveToStore();	}
