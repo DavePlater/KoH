@@ -107,10 +107,10 @@ function ValuesChangedBrew()
 		var iVal=parseInt(gV("tbBrew"+iSize));
 		console.log("iSize="+iSize+"*"+iVal+"=");
 		var iSizeTotal=(!isNaN(iVal))?(iVal*iSize):0;		
-		sHTML("lblTotalBrew"+iSize,MinsToNice(iSizeTotal)+"");
+		sHTML("lblTotalBrew"+iSize,numberWithCommas(iSizeTotal)+"");
 		iTotal+=iSizeTotal;
 	}	
-	sHTML("lblTotalBrew",MinsToNice(iTotal));
+	sHTML("lblTotalBrew",numberWithCommas(iTotal));
 }
 function BuildTableBrew()
 {
