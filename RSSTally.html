@@ -46,6 +46,7 @@ function MinsToNice(iMins)
 
 var arySizesRSS=[500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000,2500000,5000000];
 var arySizesSpeedUps=[1,5,15,60,	3*60, 8*60, 24*60, 	3*24*60, 7*24*60, 30*24*60];
+var arySizesBrews=[10, 25, 50, 100, 250];
 
 function ValuesChangedRSS()
 {
@@ -96,11 +97,36 @@ function BuildTableSpeedUp()
 	}
 	sHTML("tblSpeedUp",str);
 }
-
+//////////////////////////////
+function ValuesChangedBrew()
+{
+	var iTotal=0;
+	for(var i=0;i<arySizesBrews.length;i++)
+	{
+		var iSize=arySizesBrews[i];
+		var iVal=parseInt(gV("tbBrew"+iSize));
+		console.log("iSize="+iSize+"*"+iVal+"=");
+		var iSizeTotal=(!isNaN(iVal))?(iVal*iSize):0;		
+		sHTML("lblTotalBrew"+iSize,MinsToNice(iSizeTotal)+"");
+		iTotal+=iSizeTotal;
+	}	
+	sHTML("lblTotalBrew",MinsToNice(iTotal));
+}
+function BuildTableBrew()
+{
+	var str="";
+	for(var i=0;i<arySizesBrews.length;i++)
+	{
+		var iSize=arySizesBrews[i];
+		str+="<tr><th>"+MinsToNice(iSize)+"</th><td><input id=\"tbBrew"+iSize+"\" onkeyup=\"ValuesChangedBrew();\" /></td><td><span id=\"lblTotalBrew"+iSize+"\"></span></td></tr>";
+	}
+	sHTML("tblBrew",str);
+}
 function body_onload()
 {
 	BuildTableRSS("Ore");
 	BuildTableSpeedUp();
+	BuildTableBrew();
 }
 </script>
 </head>
@@ -120,6 +146,13 @@ function body_onload()
 		<tr><th>Total</th><td colspan="2"><span id="lblTotalSpeedUp">&nbsp;</span></td></tr>
 		<tr><th>Value</th><th>Amount</th><th>Total</th></tr>
 		<tbody id="tblSpeedUp"></tbody>
+	</table>
+</td>
+<td>
+	<table id="tblAll3" cellpadding="5" cellspacing="2" border="1">
+		<tr><th>Total</th><td colspan="2"><span id="lblTotalBrew">&nbsp;</span></td></tr>
+		<tr><th>Value</th><th>Amount</th><th>Total</th></tr>
+		<tbody id="tblBrew"></tbody>
 	</table>
 </td>
 </tr>
