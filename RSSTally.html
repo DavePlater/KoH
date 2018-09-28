@@ -118,7 +118,7 @@ function BuildTableBrew()
 	for(var i=0;i<arySizesBrews.length;i++)
 	{
 		var iSize=arySizesBrews[i];
-		str+="<tr><th>"+MinsToNice(iSize)+"</th><td><input id=\"tbBrew"+iSize+"\" onkeyup=\"ValuesChangedBrew();\" /></td><td><span id=\"lblTotalBrew"+iSize+"\"></span></td></tr>";
+		str+="<tr><th>"+(iSize)+"</th><td><input id=\"tbBrew"+iSize+"\" onkeyup=\"ValuesChangedBrew();\" /></td><td><span id=\"lblTotalBrew"+iSize+"\"></span></td></tr>";
 	}
 	sHTML("tblBrew",str);
 }
