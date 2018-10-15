@@ -88,6 +88,15 @@ function ComputeEnergyRegen()
 	if(gCB("cbEnergyBonusFromRulerDecree",false)==true){Bonus=20.0;}
 	ComputeIt("tbEnergyRegen","tbEnergyRegenBonusPercent","lblEnergyRegenResults",Bonus);	
 }
+function ClearAllyValues()
+{
+	sV("tbAllyPrice","");
+	sV("tbAllyGrasslands","");
+	sV("tbAllyBadlands","");
+	sV("tbAllySwamplands","");
+	sHTML("lblAllyTotalPercent","");
+	sHTML("lblAllyCostPerPoint","");
+}
 function ComputeAllyValue()
 {
 	var fPrice= parseFloat(gV("tbAllyPrice"));
@@ -156,7 +165,7 @@ function ComputeHospitalCap_old()
 			</td>
 			<td>
 				<table cellpadding="5" cellspacing="5" border="1px">
-					<tr><th colspan="2">Ally Value</th></tr>
+					<tr><td><button id="btClearAlly" onclick="ClearAllyValues();">Clear</button></td><th>Ally Value</th></tr>
 					<tr><th>Price:</th><td><input type="text" id="tbAllyPrice" onchange="ComputeAllyValue();" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /></td></tr>
 					<tr><td colspan="2"></td></tr>
 					<tr><th>Grasslands:</th><td><input type="text" id="tbAllyGrasslands" onchange="ComputeAllyValue();" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /></td></tr>
