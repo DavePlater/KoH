@@ -55,7 +55,7 @@
 				newCell.innerHTML=new Date(this.EpochTime).toString();
 				newCell = tr.insertCell(0);
 				var dtBiomeChangeCheck=new Date(this.EpochTime);//time in UTC(Which it always is i guess??)
-				if(dtBiomeChangeCheck.getHours()==9+12){newCell.innerHTML="***BIOME CHANGE***"+this.Name;}
+				if(dtBiomeChangeCheck.getUTCHours()==9+12){newCell.innerHTML="***BIOME CHANGE***"+this.Name;}
 				else{	newCell.innerHTML=this.Name;	}
 			}
 		}
@@ -202,8 +202,8 @@
 	}
 	function bodyLoad()
 	{
-		NumBack=3;//(localStorage.getItem("QuestTimer_NumBack")||3);
-		NumForward=11;//(localStorage.getItem("QuestTimer_NumForward")||11);
+		NumBack=parseInt((localStorage.getItem("QuestTimer_NumBack")||3));
+		NumForward=parseInt((localStorage.getItem("QuestTimer_NumForward")||11));
 		//force save
 		localStorage.setItem("QuestTimer_NumBack", NumBack);
 		localStorage.setItem("QuestTimer_NumForward", NumForward);
