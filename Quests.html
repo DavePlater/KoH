@@ -260,7 +260,7 @@
 				var Diff_BiomeIndex=Math.floor((qt.EpochTime - oKnownBiome.EpochTime) / OneDay); //biome indexes move on the day
 				var ActiveBiomeIDX = myBiomes.MoveIDXForward(KnownBiomeIDX,Diff_BiomeIndex);
 				var oActiveBiome = myBiomes.getAt(ActiveBiomeIDX);
-				strBiomeClassName = oActiveBiome.Name;
+				strBiomeClassName = oActiveBiome.Name+"Day";
 				AppendRow(qt, strClassName, strBiomeClassName );
 			}
 		}
