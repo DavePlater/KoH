@@ -11,7 +11,7 @@
 	.FutureQuest { }
 	.GrasslandsDay{background-color:#65dc42;}
 	.BadlandsDay{background-color:#dcb042;}
-	.SwapDay{background-color:#ab42dc;}
+	.SwampDay{background-color:#ab42dc;}
 </style>
 <script type="text/javascript">
 
@@ -216,8 +216,12 @@
 			for(var i=0; i < (1+BiomeNumBack+BiomeNumForward);i++)
 			{
 				var qt = new QuestAndTime( myBiomes.getAt(myBiomes.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneDay));
-				var RowMarker = CompareTo(qt.EpochTime, CurrentEpoch);
-				AppendBiomeRow(qt,  qt.Name+"Day");
+				var strClassName = qt.Name+"Day";
+				var RowMarker = CompareTo(qt.EpochTime, CurrentEpoch);		
+				if(RowMarker==0){strClassName +=" CurrentQuest";}
+				else if(RowMarker==-1){strClassName +=" PastQuest";}
+				else if(RowMarker==1){strClassName +=" FutureQuest";}
+				AppendBiomeRow(qt,  );
 			}
 		}
 	}
