@@ -5,6 +5,7 @@
 <meta name="author" content="KingPlater" />
 <meta name="description" content="https://daveplater.github.io/KoH/Quests.html" />
 <style type="text/css">
+	.smallLabel {color:orange; font-size: smaller;}
 	.CurrentQuest { font-weight:bold; color:red;}
 	.PastQuest { }
 	.FutureQuest { }
@@ -55,7 +56,7 @@
 				newCell.innerHTML=new Date(this.EpochTime).toString();
 				newCell = tr.insertCell(0);
 				var dtBiomeChangeCheck=new Date(this.EpochTime);//time in UTC(Which it always is i guess??)
-				if(dtBiomeChangeCheck.getUTCHours()==9+12){newCell.innerHTML="***BIOME CHANGE***"+this.Name;}
+				if(dtBiomeChangeCheck.getUTCHours()==9+12){newCell.innerHTML="<span class=\"smallLabel\">BIOME CHANGE<span> "+this.Name;}
 				else{	newCell.innerHTML=this.Name;	}
 			}
 		}
