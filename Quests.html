@@ -47,14 +47,9 @@
 		{
 			if(tr!=undefined)
 			{
-				tr.innerHTML="";//clear it?
-				
 				var StartTime = this.EpochTime + (5*OneMinute);
 				var oTimeUntilStart = GetSpanFromTimes(	StartTime, new Date().getTime());
 				var newCell;				
-				newCell = tr.insertCell(-1);
-				//this one is an empty for the day!
-				newCell.className="SwampDay";
 				newCell = tr.insertCell(-1);
 				newCell.innerHTML=this.Name;
 				newCell = tr.insertCell(-1);
@@ -143,21 +138,21 @@
 		var obj=document.getElementById(strElementID);
 		if(obj!=undefined && obj["innerHTML"] != undefined) 	{			obj.innerHTML=strHTMLValue;		}
 	}
-	function AppendARow(strTableName,objQuestTime, strClassName)
+	function AppendARow(strTableName, objQuestTime, strClassName, strBiomeClassName)
 	{
 		var tbl = document.getElementById(strTableName);
 		if(tbl!=undefined && objQuestTime!=undefined)
 		{
 			var newRow   = tbl.insertRow(tbl.rows.length);
-			newRow.className=strClassName;
-			/*if(RowMarker==0){newRow.className ="CurrentQuest";}
-			else if(RowMarker==-1){newRow.className ="PastQuest";}
-			else if(RowMarker==1){newRow.className ="FutureQuest";}*/
+			newRow.innerHTML=""; //clear
+			newRow.className=strClassName; //set the row class
+			var newCell = newRow.insertCell(-1);
+			newCell.className=strBiomeClassName; //set the "biome class"
 			objQuestTime.setRow(newRow);
 		}
 	}
-	function AppendRow(objQuestTime, strClassName)	{	AppendARow("tblQuestList",objQuestTime, strClassName);	}
-	function AppendBiomeRow(objQuestTime, strClassName){	AppendARow("tblBiomeList",objQuestTime, strClassName);	}
+	function AppendRow(objQuestTime, strClassName, strBiomeClassName)	{	AppendARow("tblQuestList",objQuestTime, strClassName, strBiomeClassName);	}
+	function AppendBiomeRow(objQuestTime, strClassName, strBiomeClassName){	AppendARow("tblBiomeList",objQuestTime, strClassName, strBiomeClassName);	}
 	function AppendBiomeChangeMarker(strTableName)
 	{
 		var tbl = document.getElementById(strTableName);
@@ -233,6 +228,9 @@
 		var KnownIDX=myQuests.findIDXOfValue(ConstKnownValue.Name);
 		if(KnownIDX!=-1)
 		{
+			var KnownBiomeIDX = myBiomes.findIDXOfValue(ConstBiomeKnownValue.Name);
+			var oKnownBiome = myBiomes.getAt(KnownBiomeIDX);
+			//
 			var nowEpoch = new Date().getTime();
 			var Diff= nowEpoch - ConstKnownValue.EpochTime;			
 			var NumHours = Math.floor(Diff / OneHour);			
@@ -258,7 +256,12 @@
 				if(RowMarker==0){strClassName ="CurrentQuest";}
 				else if(RowMarker==-1){strClassName ="PastQuest";}
 				else if(RowMarker==1){strClassName ="FutureQuest";}
-				AppendRow(qt, strClassName );
+				var strBiomeClassName="";
+				var Diff_BiomeIndex=Math.floor((qt.EpochTime - oKnownBiome.EpochTime) / OneDay); //biome indexes move on the day
+				var ActiveBiomeIDX = myBiomes.MoveIDXForward(KnownBiomeIDX,Diff_BiomeIndex);
+				var oActiveBiome = myBiomes.getAt(ActiveBiomeIDX);
+				strBiomeClassName = oActiveBiome.Name;
+				AppendRow(qt, strClassName, strBiomeClassName );
 			}
 		}
 	}
