@@ -224,14 +224,14 @@
 	}
 	function SetPrevCurNextValues()
 	{
+		var KnownBiomeIDX = myBiomes.findIDXOfValue(ConstBiomeKnownValue.Name);
+		var oKnownBiome = myBiomes.getAt(KnownBiomeIDX);
 		//so! search through aryCycle and find ConstKnownValue.Name
 		var KnownIDX=myQuests.findIDXOfValue(ConstKnownValue.Name);
 		if(KnownIDX!=-1)
 		{
-			var KnownBiomeIDX = myBiomes.findIDXOfValue(ConstBiomeKnownValue.Name);
-			var oKnownBiome = myBiomes.getAt(KnownBiomeIDX);
-			console.log("KnownBiomeIDX="+KnownBiomeIDX);
-			console.log(oKnownBiome);
+			//console.log("KnownBiomeIDX="+KnownBiomeIDX);
+			//console.log(oKnownBiome);
 			//
 			var nowEpoch = new Date().getTime();
 			var Diff= nowEpoch - ConstKnownValue.EpochTime;			
@@ -258,10 +258,14 @@
 				if(RowMarker==0){strClassName ="CurrentQuest";}
 				else if(RowMarker==-1){strClassName ="PastQuest";}
 				else if(RowMarker==1){strClassName ="FutureQuest";}
+				//
 				var strBiomeClassName="";
 				var Diff_BiomeIndex=Math.floor((qt.EpochTime - oKnownBiome.EpochTime) / OneDay); //biome indexes move on the day
 				var ActiveBiomeIDX = myBiomes.MoveIDXForward(KnownBiomeIDX,Diff_BiomeIndex);
 				var oActiveBiome = myBiomes.getAt(ActiveBiomeIDX);
+				console.log("Diff_BiomeIndex="+Diff_BiomeIndex);
+				console.log("ActiveBiomeIDX="+ActiveBiomeIDX);
+				console.log(oActiveBiome);
 				strBiomeClassName = oActiveBiome.Name+"Day";
 				AppendRow(qt, strClassName, strBiomeClassName );
 			}
