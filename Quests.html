@@ -55,11 +55,11 @@
 				newCell = tr.insertCell(0);
 				newCell.innerHTML=new Date(this.EpochTime).toString();
 				newCell = tr.insertCell(0);
-				var strHTMLName="";
+				/*var strHTMLName="";
 				var dtBiomeChangeCheck=new Date(this.EpochTime);
 				if(dtBiomeChangeCheck.getUTCHours()==9+12){	strHTMLName="<span class=\"smallLabel\">BIOME CHANGE</span> ";	}
-				strHTMLName+=this.Name;
-				newCell.innerHTML=strHTMLName;
+				strHTMLName+=this.Name;*/
+				newCell.innerHTML=this.Name;
 			}
 		}
 	} //end of class
@@ -160,6 +160,10 @@
 			var newRow   = tblDerived.insertRow(tblDerived.rows.length);
 			newRow.innerHTML="";//clear it?
 			var newCell;
+			newCell = newRow.insertCell(0);//last
+			
+			newCell = newRow.insertCell(0);//last
+			newCell.innerHTML="Biome has cycled";
 			newCell = newRow.insertCell(0);//last
 			newCell.innerHTML= "<span class=\"smallLabel\">BIOME CHANGE</span>";
 		}
