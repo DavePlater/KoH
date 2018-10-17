@@ -55,9 +55,11 @@
 				newCell = tr.insertCell(0);
 				newCell.innerHTML=new Date(this.EpochTime).toString();
 				newCell = tr.insertCell(0);
-				var dtBiomeChangeCheck=new Date(this.EpochTime);//time in UTC(Which it always is i guess??)
-				if(dtBiomeChangeCheck.getUTCHours()==9+12){newCell.innerHTML="<span class=\"smallLabel\">BIOME CHANGE<span> "+this.Name;}
-				else{	newCell.innerHTML=this.Name;	}
+				var strHTMLName="";
+				var dtBiomeChangeCheck=new Date(this.EpochTime);
+				if(dtBiomeChangeCheck.getUTCHours()==9+12){	strHTMLName="<span class=\"smallLabel\">BIOME CHANGE</span> ";	}
+				strHTMLName+=this.Name;
+				newCell.innerHTML=strHTMLName;
 			}
 		}
 	} //end of class
