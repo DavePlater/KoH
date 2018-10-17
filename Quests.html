@@ -9,6 +9,9 @@
 	.CurrentQuest { font-weight:bold; color:red;}
 	.PastQuest { }
 	.FutureQuest { }
+	.GrasslandsDay{background-color:#65dc42;}
+	.BadlandsDay{background-color:#dcb042;}
+	.SwapDay{background-color:#ab42dc;}
 </style>
 <script type="text/javascript">
 
@@ -139,20 +142,21 @@
 		var obj=document.getElementById(strElementID);
 		if(obj!=undefined && obj["innerHTML"] != undefined) 	{			obj.innerHTML=strHTMLValue;		}
 	}
-	function AppendARow(strTableName,objQuestTime, RowMarker)
+	function AppendARow(strTableName,objQuestTime, strClassName)
 	{
 		var tbl = document.getElementById(strTableName);
 		if(tbl!=undefined && objQuestTime!=undefined)
 		{
 			var newRow   = tbl.insertRow(tbl.rows.length);
-			if(RowMarker==0){newRow.className ="CurrentQuest";}
+			newRow.className=strClassName;
+			/*if(RowMarker==0){newRow.className ="CurrentQuest";}
 			else if(RowMarker==-1){newRow.className ="PastQuest";}
-			else if(RowMarker==1){newRow.className ="FutureQuest";}
+			else if(RowMarker==1){newRow.className ="FutureQuest";}*/
 			objQuestTime.setRow(newRow);
 		}
 	}
-	function AppendRow(objQuestTime, RowMarker)	{	AppendARow("tblQuestList",objQuestTime, RowMarker);	}
-	function AppendBiomeRow(objQuestTime, RowMarker){	AppendARow("tblBiomeList",objQuestTime, RowMarker);	}
+	function AppendRow(objQuestTime, strClassName)	{	AppendARow("tblQuestList",objQuestTime, strClassName);	}
+	function AppendBiomeRow(objQuestTime, strClassName){	AppendARow("tblBiomeList",objQuestTime, strClassName);	}
 	function AppendBiomeChangeMarker(strTableName)
 	{
 		var tbl = document.getElementById(strTableName);
@@ -212,7 +216,8 @@
 			for(var i=0; i < (1+BiomeNumBack+BiomeNumForward);i++)
 			{
 				var qt = new QuestAndTime( myBiomes.getAt(myBiomes.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneDay));
-				AppendBiomeRow(qt, CompareTo(qt.EpochTime, CurrentEpoch) );
+				var RowMarker = CompareTo(qt.EpochTime, CurrentEpoch);
+				AppendBiomeRow(qt,  qt.Name+"Day");
 			}
 		}
 	}
@@ -242,7 +247,12 @@
 				{
 					AppendBiomeChangeMarker("tblQuestList");
 				}
-				AppendRow(qt, CompareTo(qt.EpochTime, CurrentEpoch) );
+				var strClassName="";
+				var RowMarker=CompareTo(qt.EpochTime, CurrentEpoch);				
+				if(RowMarker==0){strClassName ="CurrentQuest";}
+				else if(RowMarker==-1){strClassName ="PastQuest";}
+				else if(RowMarker==1){strClassName ="FutureQuest";}
+				AppendRow(qt, strClassName );
 			}
 		}
 	}
