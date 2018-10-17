@@ -55,10 +55,6 @@
 				newCell = tr.insertCell(0);
 				newCell.innerHTML=new Date(this.EpochTime).toString();
 				newCell = tr.insertCell(0);
-				/*var strHTMLName="";
-				var dtBiomeChangeCheck=new Date(this.EpochTime);
-				if(dtBiomeChangeCheck.getUTCHours()==9+12){	strHTMLName="<span class=\"smallLabel\">BIOME CHANGE</span> ";	}
-				strHTMLName+=this.Name;*/
 				newCell.innerHTML=this.Name;
 			}
 		}
@@ -143,9 +139,22 @@
 		var obj=document.getElementById(strElementID);
 		if(obj!=undefined && obj["innerHTML"] != undefined) 	{			obj.innerHTML=strHTMLValue;		}
 	}
+	function AppendARow(strTableName,objQuestTime, RowMarker)
+	{
+		var tbl = document.getElementById(strTableName);
+		if(tbl!=undefined && objQuestTime!=undefined)
+		{
+			var newRow   = tbl.insertRow(tbl.rows.length);
+			if(RowMarker==0){newRow.className ="CurrentQuest";}
+			else if(RowMarker==-1){newRow.className ="PastQuest";}
+			else if(RowMarker==1){newRow.className ="FutureQuest";}
+			objQuestTime.setRow(newRow);
+		}
+	}
 	function AppendRow(objQuestTime, RowMarker)
 	{
-		var tblDerived = document.getElementById("tblDerived");
+		AppendARow("tblDerived",objQuestTime, RowMarker);
+		/*var tblDerived = document.getElementById("tblDerived");
 		if(tblDerived!=undefined && objQuestTime!=undefined)
 		{
 			var newRow   = tblDerived.insertRow(tblDerived.rows.length);
@@ -153,11 +162,12 @@
 			else if(RowMarker==-1){newRow.className ="PastQuest";}
 			else if(RowMarker==1){newRow.className ="FutureQuest";}
 			objQuestTime. setRow(newRow);
-		}
+		}*/
 	}
 	function AppendBiomeRow(objQuestTime, RowMarker)
 	{
-		var tblBiomeList = document.getElementById("tblBiomeList");
+		AppendARow("tblBiomeList",objQuestTime, RowMarker);
+		/*var tblBiomeList = document.getElementById("tblBiomeList");
 		if(tblBiomeList!=undefined && objQuestTime!=undefined)
 		{
 			var newRow   = tblBiomeList.insertRow(tblBiomeList.rows.length);
@@ -165,7 +175,7 @@
 			else if(RowMarker==-1){newRow.className ="PastQuest";}
 			else if(RowMarker==1){newRow.className ="FutureQuest";}
 			objQuestTime.setRow(newRow);
-		}
+		}*/
 	}
 	function AppendBiomeChangeMarker()
 	{
