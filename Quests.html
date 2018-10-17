@@ -151,46 +151,20 @@
 			objQuestTime.setRow(newRow);
 		}
 	}
-	function AppendRow(objQuestTime, RowMarker)
-	{
-		AppendARow("tblDerived",objQuestTime, RowMarker);
-		/*var tblDerived = document.getElementById("tblDerived");
-		if(tblDerived!=undefined && objQuestTime!=undefined)
-		{
-			var newRow   = tblDerived.insertRow(tblDerived.rows.length);
-			if(RowMarker==0){newRow.className ="CurrentQuest";}
-			else if(RowMarker==-1){newRow.className ="PastQuest";}
-			else if(RowMarker==1){newRow.className ="FutureQuest";}
-			objQuestTime. setRow(newRow);
-		}*/
-	}
-	function AppendBiomeRow(objQuestTime, RowMarker)
-	{
-		AppendARow("tblBiomeList",objQuestTime, RowMarker);
-		/*var tblBiomeList = document.getElementById("tblBiomeList");
-		if(tblBiomeList!=undefined && objQuestTime!=undefined)
-		{
-			var newRow   = tblBiomeList.insertRow(tblBiomeList.rows.length);
-			if(RowMarker==0){newRow.className ="CurrentQuest";}
-			else if(RowMarker==-1){newRow.className ="PastQuest";}
-			else if(RowMarker==1){newRow.className ="FutureQuest";}
-			objQuestTime.setRow(newRow);
-		}*/
-	}
+	function AppendRow(objQuestTime, RowMarker)	{		AppendARow("tblDerived",objQuestTime, RowMarker);	}
+	function AppendBiomeRow(objQuestTime, RowMarker)	{		AppendARow("tblBiomeList",objQuestTime, RowMarker);	}
 	function AppendBiomeChangeMarker()
 	{
 		var tblDerived = document.getElementById("tblDerived");
 		if(tblDerived!=undefined )
 		{
 			var newRow   = tblDerived.insertRow(tblDerived.rows.length);
-			newRow.innerHTML="";//clear it?
-			var newCell;
-			newCell = newRow.insertCell(0);//last
-			
-			newCell = newRow.insertCell(0);//last
-			newCell.innerHTML="Biome has cycled";
-			newCell = newRow.insertCell(0);//last
+			newRow.innerHTML="<td><span class=\"smallLabel\">BIOME CHANGE</span></td><td>Biome has cycled</td>";//clear it?
+			/*var newCell;
+			newCell = newRow.insertCell(-1);
 			newCell.innerHTML= "<span class=\"smallLabel\">BIOME CHANGE</span>";
+			newCell = newRow.insertCell(-1);//last
+			newCell.innerHTML="Biome has cycled";			*/
 		}
 	}
 	
