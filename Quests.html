@@ -14,7 +14,12 @@
 	.SwampDay{background-color:#ab42dc;}
 </style>
 <script type="text/javascript">
-
+	//Miliseconds Unit
+	var OneSecond=(1000*1);
+	var OneMinute=(60*OneSecond);
+	var OneHour = (60*OneMinute);
+	var OneDay= (24*OneHour);
+	
 	function GetSpanFromTimes(T1, T2)
 	{
 		var retval={'H':0, 'M':0, 'S':0, 'hasPassed':false };
@@ -22,15 +27,15 @@
 		var SecsPerHour=60*60;
 		var SecsPerMinute=60;
 		
-		var diff = T1  - T2;
-		var Seconds_from_T1_to_T2 = diff / 1000;
+		var diff_ms = T1  - T2;
+		var Seconds_from_T1_to_T2 = diff_ms;// / OneSecond;
 		//now figure out H,M,S
 		retval["hasPassed"]=(Seconds_from_T1_to_T2<0);
 		var Multiplier=(Seconds_from_T1_to_T2<0)?-1.0:1.0;
 		var hold=Math.abs(Seconds_from_T1_to_T2);
-		while(hold>SecsPerHour)		{			retval.H++;			hold=hold-SecsPerHour;		}
-		while(hold>SecsPerMinute)		{			retval.M++;			hold=hold-SecsPerMinute;		}
-		while(hold>1)		{			retval.S++;			hold=hold-1;		}
+		while(hold>OneHour)	 {	retval.H++;	hold=hold-OneHour;		}
+		while(hold>OneMinute){	retval.M++;	hold=hold-OneMinute;		}
+		while(hold>OneSecond)		 {	retval.S++;	hold=hold-OneSecond;		}
 		
 		return retval;
 	}
@@ -43,22 +48,16 @@
 			if(tr!=undefined)
 			{
 				tr.innerHTML="";//clear it?
-				var newCell;
-				newCell = tr.insertCell(0);//last
-				//var diff = new Date().getTime() - this.EpochTime;
-				//var Seconds_from_T1_to_T2 = dif / 1000;
-				var MilisPerMinute=(60*1000);
-				var StartTime = this.EpochTime + (5*MilisPerMinute);
-				//console.log(MilisPerMinute);
-				var oSpan = GetSpanFromTimes(	StartTime, new Date().getTime());
-				//console.log(oSpan);
-				//var strSpan=tspan.getHours()+"h"+tspan.getMinutes()+"m"+tspan.getSeconds()+"s";
-				var strSpan=oSpan.toString();
-				newCell.innerHTML=strSpan;
-				newCell = tr.insertCell(0);
-				newCell.innerHTML=new Date(this.EpochTime).toString();
-				newCell = tr.insertCell(0);
+				
+				var StartTime = this.EpochTime + (5*OneMinute);
+				var oTimeUntilStart = GetSpanFromTimes(	StartTime, new Date().getTime());
+				var newCell;				
+				newCell = tr.insertCell(-1);
 				newCell.innerHTML=this.Name;
+				newCell = tr.insertCell(1-);
+				newCell.innerHTML=new Date(this.EpochTime).toString();
+				newCell = tr.insertCell(1-);
+				newCell.innerHTML=oTimeUntilStart.toString();
 			}
 		}
 	} //end of class
@@ -111,8 +110,7 @@
 </script>
 <script type="text/javascript">
 	var tTimeUpdater=-1;
-	var OneHour = (60*60*1000);
-	var OneDay= (24*OneHour);
+	
 	var NumBack=3;
 	var NumForward=11;
 	//
@@ -197,10 +195,11 @@
 		else if(tm1>tm2){retval=1;}
 		return retval;
 	}
+	function NumHours
 	function SetPrevCurNextBiomeValues()
 	{
-		var BiomeNumBack=1;
-		var BiomeNumForward=2;
+		var BiomeNumBack=0;
+		var BiomeNumForward=3;
 		var KnownBiomeIDX=myBiomes.findIDXOfValue(ConstBiomeKnownValue.Name);
 		if(KnownBiomeIDX!=-1)
 		{
