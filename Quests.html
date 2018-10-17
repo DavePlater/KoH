@@ -48,14 +48,15 @@
 				//console.log(MilisPerMinute);
 				var oSpan = GetSpanFromTimes(	StartTime, new Date().getTime());
 				//console.log(oSpan);
-				
 				//var strSpan=tspan.getHours()+"h"+tspan.getMinutes()+"m"+tspan.getSeconds()+"s";
 				var strSpan=oSpan.toString();
 				newCell.innerHTML=strSpan;
 				newCell = tr.insertCell(0);
 				newCell.innerHTML=new Date(this.EpochTime).toString();
 				newCell = tr.insertCell(0);
-				newCell.innerHTML=this.Name;
+				var dtBiomeChangeCheck=new Date(this.EpochTime);//time in UTC(Which it always is i guess??)
+				if(dtBiomeChangeCheck.getHouts()==9+12){newCell.innerHTML="***BIOME CHANGE***"+this.Name;}
+				else{	newCell.innerHTML=this.Name;	}
 			}
 		}
 	} //end of class
@@ -115,6 +116,7 @@
 	var myQuests = new Cycle(["Construction", "Troop Training", "Monster Slaying", "Gathering", "Research", "Troop Training", "Monster Slaying","Might Growth", "Gathering", "Troop Training", "Monster Slaying"]);
 	var ConstKnownValue= new QuestAndTime("Research",1518789600000);//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
 	// "Might", 1518802310007 //fix for being on an hour interval
+	// Biome change at "2pm vancouver,bc time" durring the summer, they are UTC-7 then, so 9pm UTC
 	
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -200,6 +202,12 @@
 	}
 	function bodyLoad()
 	{
+		NumBack=(localStorage.getItem("QuestTimer_NumBack")||3);
+		NumForward=(localStorage.getItem("QuestTimer_NumForward")||11);
+		//force save
+		localStorage.setItem("QuestTimer_NumBack",NumBack);
+		localStorage.setItem("QuestTimer_NumForward",NumForward);
+		//
 		UpdateUITimes();
 		var trKnownValue = document.getElementById("trKnownValue");
 		if(trKnownValue!=undefined){	ConstKnownValue.setRow(trKnownValue);}
