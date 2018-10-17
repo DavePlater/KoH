@@ -202,11 +202,11 @@
 	}
 	function bodyLoad()
 	{
-		NumBack=(localStorage.getItem("QuestTimer_NumBack")||3);
-		NumForward=(localStorage.getItem("QuestTimer_NumForward")||11);
+		NumBack=3;//(localStorage.getItem("QuestTimer_NumBack")||3);
+		NumForward=11;//(localStorage.getItem("QuestTimer_NumForward")||11);
 		//force save
-		localStorage.setItem("QuestTimer_NumBack",NumBack);
-		localStorage.setItem("QuestTimer_NumForward",NumForward);
+		localStorage.setItem("QuestTimer_NumBack", NumBack);
+		localStorage.setItem("QuestTimer_NumForward", NumForward);
 		//
 		UpdateUITimes();
 		var trKnownValue = document.getElementById("trKnownValue");
