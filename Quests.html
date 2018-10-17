@@ -225,7 +225,6 @@
 	function SetPrevCurNextValues()
 	{
 		var KnownBiomeIDX = myBiomes.findIDXOfValue(ConstBiomeKnownValue.Name);
-		var oKnownBiome = myBiomes.getAt(KnownBiomeIDX);
 		//so! search through aryCycle and find ConstKnownValue.Name
 		var KnownIDX=myQuests.findIDXOfValue(ConstKnownValue.Name);
 		if(KnownIDX!=-1)
@@ -260,13 +259,12 @@
 				else if(RowMarker==1){strClassName ="FutureQuest";}
 				//
 				var strBiomeClassName="";
-				var Diff_BiomeIndex=Math.floor((qt.EpochTime - oKnownBiome.EpochTime) / OneDay); //biome indexes move on the day
-				var ActiveBiomeIDX = myBiomes.MoveIDXForward(KnownBiomeIDX,Diff_BiomeIndex);
+				var Diff_Biome=Math.floor((qt.EpochTime - ConstBiomeKnownValue.EpochTime) / OneDay); //biome indexes move on the day
+				var ActiveBiomeIDX = myBiomes.MoveIDXForward(KnownBiomeIDX,Diff_Biome);
 				var oActiveBiome = myBiomes.getAt(ActiveBiomeIDX);
 				console.log("Diff_BiomeIndex="+Diff_BiomeIndex);
 				console.log("ActiveBiomeIDX="+ActiveBiomeIDX);
-				console.log(oActiveBiome);
-				strBiomeClassName = oActiveBiome.Name+"Day";
+				strBiomeClassName = oActiveBiome+"Day";
 				AppendRow(qt, strClassName, strBiomeClassName );
 			}
 		}
