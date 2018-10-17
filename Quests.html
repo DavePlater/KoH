@@ -230,6 +230,8 @@
 		{
 			var KnownBiomeIDX = myBiomes.findIDXOfValue(ConstBiomeKnownValue.Name);
 			var oKnownBiome = myBiomes.getAt(KnownBiomeIDX);
+			console.log("KnownBiomeIDX="+KnownBiomeIDX);
+			console.log(oKnownBiome);
 			//
 			var nowEpoch = new Date().getTime();
 			var Diff= nowEpoch - ConstKnownValue.EpochTime;			
