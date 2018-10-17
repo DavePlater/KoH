@@ -24,15 +24,15 @@
 	{
 		var retval={'H':0, 'M':0, 'S':0, 'hasPassed':false };
 		retval["toString"]=function(){ return (this.hasPassed?"-":"")+ this.H+"h"+this.M+"m"+this.S+"s";}
-		var SecsPerHour=60*60;
-		var SecsPerMinute=60;
+		//var SecsPerHour=60*60;
+		//var SecsPerMinute=60;
 		
 		var diff_ms = T1  - T2;
-		var Seconds_from_T1_to_T2 = diff_ms;// / OneSecond;
+		//var Seconds_from_T1_to_T2 = diff_ms;// / OneSecond;
 		//now figure out H,M,S
-		retval["hasPassed"]=(Seconds_from_T1_to_T2<0);
-		var Multiplier=(Seconds_from_T1_to_T2<0)?-1.0:1.0;
-		var hold=Math.abs(Seconds_from_T1_to_T2);
+		retval["hasPassed"]=(diff_ms<0);
+		var Multiplier=(diff_ms<0)?-1.0:1.0;
+		var hold=Math.abs(diff_ms);
 		while(hold>OneHour)	 {	retval.H++;	hold=hold-OneHour;		}
 		while(hold>OneMinute){	retval.M++;	hold=hold-OneMinute;		}
 		while(hold>OneSecond)		 {	retval.S++;	hold=hold-OneSecond;		}
@@ -52,6 +52,9 @@
 				var StartTime = this.EpochTime + (5*OneMinute);
 				var oTimeUntilStart = GetSpanFromTimes(	StartTime, new Date().getTime());
 				var newCell;				
+				newCell = tr.insertCell(-1);
+				//this one is an empty for the day!
+				newCell.className="SwampDay";
 				newCell = tr.insertCell(-1);
 				newCell.innerHTML=this.Name;
 				newCell = tr.insertCell(-1);
