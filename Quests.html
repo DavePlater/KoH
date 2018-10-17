@@ -151,20 +151,15 @@
 			objQuestTime.setRow(newRow);
 		}
 	}
-	function AppendRow(objQuestTime, RowMarker)	{		AppendARow("tblDerived",objQuestTime, RowMarker);	}
-	function AppendBiomeRow(objQuestTime, RowMarker)	{		AppendARow("tblBiomeList",objQuestTime, RowMarker);	}
-	function AppendBiomeChangeMarker()
+	function AppendRow(objQuestTime, RowMarker)	{	AppendARow("tblQuestList",objQuestTime, RowMarker);	}
+	function AppendBiomeRow(objQuestTime, RowMarker){	AppendARow("tblBiomeList",objQuestTime, RowMarker);	}
+	function AppendBiomeChangeMarker(strTableName)
 	{
-		var tblDerived = document.getElementById("tblDerived");
-		if(tblDerived!=undefined )
+		var tbl = document.getElementById(strTableName);
+		if(tbl!=undefined )
 		{
-			var newRow   = tblDerived.insertRow(tblDerived.rows.length);
+			var newRow   = tbl.insertRow(tbl.rows.length);
 			newRow.innerHTML="<td><span class=\"smallLabel\">BIOME CHANGE</span></td><td>Biome has cycled</td>";//clear it?
-			/*var newCell;
-			newCell = newRow.insertCell(-1);
-			newCell.innerHTML= "<span class=\"smallLabel\">BIOME CHANGE</span>";
-			newCell = newRow.insertCell(-1);//last
-			newCell.innerHTML="Biome has cycled";			*/
 		}
 	}
 	
@@ -176,8 +171,8 @@
 	{
 		UpdateUITimes();
 		//
-		var tblDerived = document.getElementById("tblDerived");
-		if(tblDerived!=undefined){tblDerived.innerHTML="";}
+		var tblQuestList = document.getElementById("tblQuestList");
+		if(tblQuestList!=undefined){tblQuestList.innerHTML="";}
 		SetPrevCurNextValues();
 		//
 		var tblBiomeList = document.getElementById("tblBiomeList");
@@ -200,6 +195,8 @@
 	}
 	function SetPrevCurNextBiomeValues()
 	{
+		var BiomeNumBack=1;
+		var BiomeNumForward=2;
 		var KnownBiomeIDX=myBiomes.findIDXOfValue(ConstBiomeKnownValue.Name);
 		if(KnownBiomeIDX!=-1)
 		{
@@ -210,9 +207,9 @@
 			var currentIDX = myBiomes.MoveIDXForward(KnownBiomeIDX,NumHours);
 			var CurrentEpoch=(ConstBiomeKnownValue.EpochTime+(OneDay*NumHours));
 			
-			var UIStartEpoch =  CurrentEpoch - (NumBack*OneDay)
-			var UIStartIDX = myBiomes.MoveIDXBackward(currentIDX,NumBack);
-			for(var i=0; i < (1+NumBack+NumForward);i++)
+			var UIStartEpoch =  CurrentEpoch - (BiomeNumBack*OneDay)
+			var UIStartIDX = myBiomes.MoveIDXBackward(currentIDX,BiomeNumBack);
+			for(var i=0; i < (1+BiomeNumBack+BiomeNumForward);i++)
 			{
 				var qt = new QuestAndTime( myBiomes.getAt(myBiomes.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneDay));
 				AppendBiomeRow(qt, CompareTo(qt.EpochTime, CurrentEpoch) );
@@ -243,7 +240,7 @@
 				var dtBiomeChangeCheck=new Date(qt.EpochTime);
 				if(dtBiomeChangeCheck.getUTCHours()==9+12)
 				{
-					AppendBiomeChangeMarker();
+					AppendBiomeChangeMarker("tblQuestList");
 				}
 				AppendRow(qt, CompareTo(qt.EpochTime, CurrentEpoch) );
 			}
@@ -287,7 +284,7 @@
 		</thead>
 		<thead><tr><th>Quest Name</th><th>Quest Time</th><th>Start Time</th></tr></thead>
 		
-		<tbody id="tblDerived">
+		<tbody id="tblQuestList">
 		</tbody>
 	</table>
 	<table cellpadding="5" cellspacing="5" border="1px">
