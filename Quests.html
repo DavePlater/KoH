@@ -153,13 +153,13 @@
 	}
 	function AppendRow(objQuestTime, strClassName, strBiomeClassName)	{	AppendARow("tblQuestList",objQuestTime, strClassName, strBiomeClassName);	}
 	function AppendBiomeRow(objQuestTime, strClassName, strBiomeClassName){	AppendARow("tblBiomeList",objQuestTime, strClassName, strBiomeClassName);	}
-	function AppendBiomeChangeMarker(strTableName)
+	function AppendBiomeChangeMarker(strTableName, strBiomeName)
 	{
 		var tbl = document.getElementById(strTableName);
 		if(tbl!=undefined )
 		{
 			var newRow   = tbl.insertRow(tbl.rows.length);
-			newRow.innerHTML="<td></td><td><span class=\"smallLabel\">BIOME CHANGE</span></td><td>Biome has cycled</td>";//clear it?
+			newRow.innerHTML="<td></td><td><span class=\"smallLabel\">BIOME CHANGE</span></td><td>Biome has cycled to <span class=\""+strBiomeName+"Day\">"+strBiomeName+"<span></td>";//clear it?
 		}
 	}
 	
@@ -247,11 +247,7 @@
 				//var AmIOld = qt.EpochTime < CurrentEpoch; //-1
 				//var AmICurrent = qt.EpochTime == CurrentEpoch;//0
 				//var AmIFuture = qt.EpochTime > CurrentEpoch;//1
-				var dtBiomeChangeCheck=new Date(qt.EpochTime);
-				if(dtBiomeChangeCheck.getUTCHours()==9+12)
-				{
-					AppendBiomeChangeMarker("tblQuestList");
-				}
+				
 				var strClassName="";
 				var RowMarker=CompareTo(qt.EpochTime, CurrentEpoch);				
 				if(RowMarker==0){strClassName ="CurrentQuest";}
@@ -265,6 +261,13 @@
 				console.log("Diff_Biome="+Diff_Biome);
 				console.log("ActiveBiomeIDX="+ActiveBiomeIDX);
 				strBiomeClassName = oActiveBiome+"Day";
+				
+				var dtBiomeChangeCheck=new Date(qt.EpochTime);
+				if(dtBiomeChangeCheck.getUTCHours()==9+12)
+				{
+					AppendBiomeChangeMarker("tblQuestList",oActiveBiome);
+				}
+				
 				AppendRow(qt, strClassName, strBiomeClassName );
 			}
 		}
