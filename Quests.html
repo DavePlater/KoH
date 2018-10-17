@@ -113,6 +113,7 @@
 <script type="text/javascript">
 	var tTimeUpdater=-1;
 	var OneHour = (60*60*1000);
+	var OneDay= (24*OneHour);
 	var NumBack=3;
 	var NumForward=11;
 	//
@@ -120,7 +121,9 @@
 	var ConstKnownValue= new QuestAndTime("Research",1518789600000);//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
 	// "Might", 1518802310007 //fix for being on an hour interval
 	// Biome change at "2pm vancouver,bc time" durring the summer, they are UTC-7 then, so 9pm UTC
-	
+	// Wed, 17 Oct 2018 21:00:00 GMT was start og SWAMP day
+	var myBiomes=new Cycle(["Grasslands", "Badlands", "Swamp"]);	
+	var ConstBiomeKnownValue= new QuestAndTime("Swamp",1539810000000);
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////	
@@ -152,6 +155,18 @@
 			objQuestTime. setRow(newRow);
 		}
 	}
+	function AppendBiomeRow(objQuestTime, RowMarker)
+	{
+		var tblBiomeList = document.getElementById("tblBiomeList");
+		if(tblBiomeList!=undefined && objQuestTime!=undefined)
+		{
+			var newRow   = tblBiomeList.insertRow(tblBiomeList.rows.length);
+			if(RowMarker==0){newRow.className ="CurrentQuest";}
+			else if(RowMarker==-1){newRow.className ="PastQuest";}
+			else if(RowMarker==1){newRow.className ="FutureQuest";}
+			objQuestTime.setRow(newRow);
+		}
+	}
 	function AppendBiomeChangeMarker()
 	{
 		var tblDerived = document.getElementById("tblDerived");
@@ -176,9 +191,14 @@
 	function tmTick()
 	{
 		UpdateUITimes();
+		//
 		var tblDerived = document.getElementById("tblDerived");
 		if(tblDerived!=undefined){tblDerived.innerHTML="";}
 		SetPrevCurNextValues();
+		//
+		var tblBiomeList = document.getElementById("tblBiomeList");
+		if(tblBiomeList!=undefined){tblBiomeList.innerHTML="";}
+		SetPrevCurNextBiomeValues();
 	}
 	function UpdateUITimes()
 	{
@@ -193,6 +213,27 @@
 		else if(tm1<tm2){retval=-1;}
 		else if(tm1>tm2){retval=1;}
 		return retval;
+	}
+	function SetPrevCurNextBiomeValues()
+	{
+		var KnownBiomeIDX=myQuests.findIDXOfValue(ConstBiomeKnownValue.Name);
+		if(KnownBiomeIDX!=-1)
+		{
+			var nowEpoch = new Date().getTime();
+			var Diff= nowEpoch - ConstBiomeKnownValue.EpochTime;			
+			var NumHours = Math.floor(Diff / OneDay);
+			
+			var currentIDX = myBiomes.MoveIDXForward(KnownBiomeIDX,NumHours);
+			var CurrentEpoch=(ConstBiomeKnownValue.EpochTime+(OneDay*NumHours));
+			
+			var UIStartEpoch =  CurrentEpoch - (NumBack*OneDay)
+			var UIStartIDX = myBiomes.MoveIDXBackward(currentIDX,NumBack);
+			for(var i=0; i < (1+NumBack+NumForward);i++)
+			{
+				var qt = new QuestAndTime( myBiomes.getAt(myBiomes.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneDay));
+				AppendBiomeRow(qt, CompareTo(qt.EpochTime, CurrentEpoch) );
+			}
+		}
 	}
 	function SetPrevCurNextValues()
 	{
@@ -236,6 +277,7 @@
 		var trKnownValue = document.getElementById("trKnownValue");
 		if(trKnownValue!=undefined){	ConstKnownValue.setRow(trKnownValue);}
 		SetPrevCurNextValues();
+		SetPrevCurNextBiomeValues()
 		var oAutoUpdate=getParameterByName("AutoUpdate");
 		//console.log(oAutoUpdate);
 		if(oAutoUpdate=="true")
@@ -262,6 +304,11 @@
 		<thead><tr><th>Quest Name</th><th>Quest Time</th><th>Start Time</th></tr></thead>
 		
 		<tbody id="tblDerived">
+		</tbody>
+	</table>
+	<table cellpadding="5" cellspacing="5" border="1px">
+		<thead><tr><th>Biome Name</th><th>Quest Time</th><th>Start Time</th></tr></thead>
+		<tbody id="tblBiomeList">
 		</tbody>
 	</table>
 </body>
