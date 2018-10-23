@@ -58,7 +58,6 @@ var oActivePointList=PointValues["SlayerQuest"];
 	
 	function QuestReqsToTable(THLevelToGet)
 	{
-		
 		var str="";
 		var tblQuestReqs=document.getElementById("tblQuestReqs");
 		if(tblQuestReqs!=undefined)
@@ -173,6 +172,7 @@ var oActivePointList=PointValues["SlayerQuest"];
 	function ComputeNumberForStars(pts)
 	{
 		var strResult="";
+		var retval=[];
 		var iTHLevel = (localStorage.getItem("THLevel")||15);//default 15
 		var strPointValueObjectName=(localStorage.getItem("WhichQuest")||"SlayerQuest");
 		var oBracket=QuestReqs.getBracket(iTHLevel);
@@ -184,15 +184,35 @@ var oActivePointList=PointValues["SlayerQuest"];
 				var aryPoints=oQuests[strPointValueObjectName];
 				if(aryPoints!=undefined && aryPoints.length==3)
 				{
+					retval.push(Math.ceil(aryPoints[0]/pts));
+					retval.push(Math.ceil(aryPoints[1]/pts));
+					retval.push(Math.ceil(aryPoints[2]/pts));
 					strResult += "[1 Star]: "+Math.ceil(aryPoints[0]/pts)+"\r\n";
 					strResult += "[2 Star]: "+Math.ceil(aryPoints[1]/pts)+"\r\n";
 					strResult += "[3 Star]: "+Math.ceil(aryPoints[2]/pts)+"\r\n";
 				}
 			}
 		}
-		return strResult;
+		retval.push(strResult);
+		return retval;
 	}
-	
+	function SetRow(strTableName, strQuest, strMonsterLevel, strHits2Kill, str1Star, str2Star, str3Star)
+	{// tblMonsterData
+		var otbl=document.getElementById(strTableName);
+		if(otbl!=undefined)
+		{
+			var str="";
+			str+="<tr>";
+			str+="<td>"strQuest+"</td>";
+			str+="<td>"strMonsterLevel+"</td>";
+			str+="<td>"strHits2Kill+"</td>";
+			str+="<td>"str1Star+"</td>";
+			str+="<td>"str2Star+"</td>";
+			str+="<td>"str3Star+"</td>";
+			str+="</tr>";
+			otbl.innerHTML=str;
+		}
+	}
 	function btCalculate_click()
 	{
 		SaveFieldsToStorage();
@@ -215,7 +235,13 @@ var oActivePointList=PointValues["SlayerQuest"];
 			pts+=(iLevel*iMH);
 		}
 		strResult+="Points: "+pts+"\r\n";
-		strResult+="\r\n"+ComputeNumberForStars(pts);
+		var aryResults=ComputeNumberForStars(pts);
+		strResult+="\r\n"+aryResults[3];
+		
+		//pretend you can do 3/4/5 hits on each monster and fill in the table. 
+		//highlight the one that matches the selection maybe?
+		SetRow("tblMonsterData",oActivePointList.Name,iLevel,iHits,aryResults[0],aryResults[1],aryResults[2]);
+		
 		
 		sV("tbOutput",strResult);		
 	}
@@ -230,40 +256,27 @@ var oActivePointList=PointValues["SlayerQuest"];
 </head>
 <body onload="bodyLoad();">
 Points based on realm12:	
-	<table id="tblBig" border="0" cellspacing="2" cellpadding="5" >
-		<tr>
-			<td valign="top"><table id="tblPointListings" border="1" cellspacing="2" cellpadding="5">	</table></td>
-			<td valign="top">
-				
-				<table id="tblQuestReqs" border="1" cellspacing="2" cellpadding="5" style="min-width:400px;">	
-					<thead>
-							<tr><th>TH</th><td colspan="2"><input type="text" id="tbTHNumber" /> <button id="btSetTH" onclick="btSetTHclick()">Set</button></td></tr>
-					</thead>
-				</table>
-			</td>
-		</tr>
-	</table>
-	
+<table id="tblBig" border="0" cellspacing="2" cellpadding="5" >
+	<tr>
+		<td valign="top"><table id="tblPointListings" border="1" cellspacing="2" cellpadding="5">	</table></td>
+		<td valign="top">
+			<table id="tblQuestReqs" border="1" cellspacing="2" cellpadding="5" style="min-width:400px;">	
+				<thead><tr><th>TH</th><td colspan="2"><input type="text" id="tbTHNumber" /> <button id="btSetTH" onclick="btSetTHclick()">Set</button></td></tr></thead>
+			</table>
+		</td>
+	</tr>
+</table>	
 <br/>
 <div>
-	
 	Monster Level:
 	<select id="ddlMonsterLevel">
-  	<option value="1">Level 1</option>
-  	<option value="2">Level 2</option>
-  	<option value="3">Level 3</option>
+  	<option value="1">Level 1</option>  	<option value="2">Level 2</option>  	<option value="3">Level 3</option>
   	<!-- -->
-  	<option value="4">Level 4</option>
-  	<option value="5">Level 5</option>
-  	<option value="6">Level 6</option>
+  	<option value="4">Level 4</option>  	<option value="5">Level 5</option>  	<option value="6">Level 6</option>
   	<!-- -->
-  	<option value="7">Level 7</option>
-  	<option value="8">Level 8</option>
-  	<option value="9">Level 9</option>
+  	<option value="7">Level 7</option>  	<option value="8">Level 8</option>  	<option value="9">Level 9</option>
 	<!-- -->
-  	<option value="10">Level 10</option>
-  	<option value="11">Level 11</option>
-  	<option value="12">Level 12</option>
+  	<option value="10">Level 10</option>  	<option value="11">Level 11</option>  	<option value="12">Level 12</option>
 	</select> 
 	<br/>
 	Number of Attacks: <input type="text" id="tbNumAttacks" /><br/>
@@ -274,7 +287,7 @@ Points based on realm12:
 	<textarea id="tbOutput" cols="48" rows="12"></textarea>
 </div>
 <table cellpadding="5" cellspacing="5" border="1px">
-	<thead><tr><th>Quest</th><th>Monster<br/>Level</th><th>Hits to Kill</th><th>1 Star</th><th>3 Star</th><th>3 Star</th></tr></thead>
+	<thead><tr><th>Quest</th><th>Monster<br/>Level</th><th>Hits to Kill</th><th>1 Star</th><th>2 Star</th><th>3 Star</th></tr></thead>
 	<tbody id="tblMonsterData"></tbody>
 </table>
 </body>
