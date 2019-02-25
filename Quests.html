@@ -39,13 +39,23 @@
 		
 		return retval;
 	}
-	function TimeToString(dt)
+	function TimeToString(dt, iWhich)
 	{
-		//var options = { weekday: 'long'};
-		var options = { weekday: 'short', month:'short', day: 'numeric', hour: 'numeric', minute: 'numeric'};
-		var idt = new Intl.DateTimeFormat('en-US', options);
-		//var weekdaystring = idt.format(dt);
-		return idt.format(dt);
+		iWhich = (iWhich||1);
+		var retval="";
+		if(iWhich==1)
+		{
+			//var options = { weekday: 'long'};
+			var options = { weekday: 'short', month:'short', day: 'numeric', hour: 'numeric', minute: 'numeric'};
+			var idt = new Intl.DateTimeFormat('en-US', options);
+			//var weekdaystring = idt.format(dt);
+			retval = idt.format(dt);
+		}
+		else if(iWhich=2)
+		{
+			retval=dt.toString();
+		}
+		return retval;
 	}
 	class QuestAndTime 
 	{  
@@ -119,6 +129,8 @@
 	
 	var NumBack=3;
 	var NumForward=11;
+	//
+	var Date_Format_Choice = 2;
 	//
 	var myQuests = new Cycle(["Construction", "Troop Training", "Monster Slaying", "Gathering", "Research", "Troop Training", "Monster Slaying","Might Growth", "Gathering", "Troop Training", "Monster Slaying"]);
 	var ConstKnownValue= new QuestAndTime("Research",1518789600000);//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
@@ -282,9 +294,11 @@
 	}
 	function bodyLoad()
 	{
+		Date_Format_Choice = parseInt((localStorage.getItem("Date_Format_Choice")||1));
 		NumBack=parseInt((localStorage.getItem("QuestTimer_NumBack")||3));
 		NumForward=parseInt((localStorage.getItem("QuestTimer_NumForward")||11));
 		//force save
+		localStorage.setItem("Date_Format_Choice", Date_Format_Choice);
 		localStorage.setItem("QuestTimer_NumBack", NumBack);
 		localStorage.setItem("QuestTimer_NumForward", NumForward);
 		//
