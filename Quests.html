@@ -59,7 +59,7 @@
 	}
 	class QuestAndTime 
 	{  
-		constructor(Name, EpochTime) {    this.Name = Name;    this.EpochTime = EpochTime;  }
+		constructor(Name, EpochTime, dt_Format_Choice) {    this.Name = Name;    this.EpochTime = EpochTime;  this.dt_Format_Choice=dt_Format_Choice; }
 		//Method
 		setRow(tr)
 		{
@@ -71,7 +71,7 @@
 				newCell = tr.insertCell(-1);
 				newCell.innerHTML=this.Name;
 				newCell = tr.insertCell(-1);
-				newCell.innerHTML=TimeToString(new Date(this.EpochTime));//.toString();
+				newCell.innerHTML=TimeToString(new Date(this.EpochTime), dt_Format_Choice);//.toString();
 				newCell = tr.insertCell(-1);
 				newCell.innerHTML=oTimeUntilStart.toString();
 			}
@@ -232,7 +232,7 @@
 			var UIStartIDX = myBiomes.MoveIDXBackward(currentIDX,BiomeNumBack);
 			for(var i=0; i < (1+BiomeNumBack+BiomeNumForward);i++)
 			{
-				var qt = new QuestAndTime( myBiomes.getAt(myBiomes.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneDay));
+				var qt = new QuestAndTime( myBiomes.getAt(myBiomes.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneDay), Date_Format_Choice);
 				var strClassName = qt.Name+"Day";
 				var RowMarker = CompareTo(qt.EpochTime, CurrentEpoch);		
 				if(RowMarker==0){strClassName +=" CurrentQuest";}
@@ -263,7 +263,7 @@
 			var UIStartIDX = myQuests.MoveIDXBackward(currentIDX,NumBack);
 			for(var i=0; i < (1+NumBack+NumForward);i++)
 			{
-				var qt = new QuestAndTime( myQuests.getAt(myQuests.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneHour));
+				var qt = new QuestAndTime( myQuests.getAt(myQuests.MoveIDXForward(UIStartIDX,i)), UIStartEpoch + (i*OneHour), Date_Format_Choice);
 				//var AmIOld = qt.EpochTime < CurrentEpoch; //-1
 				//var AmICurrent = qt.EpochTime == CurrentEpoch;//0
 				//var AmIFuture = qt.EpochTime > CurrentEpoch;//1
