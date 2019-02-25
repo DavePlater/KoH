@@ -39,6 +39,14 @@
 		
 		return retval;
 	}
+	function TimeToString(dt)
+	{
+		//var options = { weekday: 'long'};
+		var options = { weekday: 'short', month:'short', day: 'numeric', hour: 'numeric', minute: 'numeric'};
+		var idt = new Intl.DateTimeFormat('en-US', options);
+		//var weekdaystring = idt.format(dt);
+		return idt.format(dt);
+	}
 	class QuestAndTime 
 	{  
 		constructor(Name, EpochTime) {    this.Name = Name;    this.EpochTime = EpochTime;  }
@@ -53,7 +61,7 @@
 				newCell = tr.insertCell(-1);
 				newCell.innerHTML=this.Name;
 				newCell = tr.insertCell(-1);
-				newCell.innerHTML=new Date(this.EpochTime).toString();
+				newCell.innerHTML=TimeToString(new Date(this.EpochTime));//.toString();
 				newCell = tr.insertCell(-1);
 				newCell.innerHTML=oTimeUntilStart.toString();
 			}
@@ -70,7 +78,7 @@
 			var retval=-1;//or -1??
 			for(var i=0;i<this.aryCycle.length;i++)
 			{
-				if(_value == this.aryCycle[i])			{				retval = i; break;			}
+				if(_value == this.aryCycle[i])	{	retval = i; break;	}
 			}
 			return retval;
 		}
