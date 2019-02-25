@@ -71,7 +71,7 @@
 				newCell = tr.insertCell(-1);
 				newCell.innerHTML=this.Name;
 				newCell = tr.insertCell(-1);
-				newCell.innerHTML=TimeToString(new Date(this.EpochTime), dt_Format_Choice);//.toString();
+				newCell.innerHTML=TimeToString(new Date(this.EpochTime), this.dt_Format_Choice);//.toString();
 				newCell = tr.insertCell(-1);
 				newCell.innerHTML=oTimeUntilStart.toString();
 			}
