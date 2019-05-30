@@ -65,7 +65,7 @@
 		{
 			if(tr!=undefined)
 			{
-				var StartTime = this.EpochTime + (5*OneMinute);
+				var StartTime = this.EpochTime ;//+ (5*OneMinute); As of 05/31/2019 no longer off by 5mins
 				var oTimeUntilStart = GetSpanFromTimes(	StartTime, new Date().getTime());
 				var newCell;				
 				newCell = tr.insertCell(-1);
