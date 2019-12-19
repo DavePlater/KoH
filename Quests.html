@@ -148,12 +148,13 @@
 	// research, dragon, ms, might, tt, ms, constr, tt, dragon, ms, might, tt
 	var aryCycleString2019 = ["Monster Slaying", "Construction", "Troop Training", "Dragon Growth", 
 				  "Monster Slaying", "Might Growth", "Troop Training", "Research",
-				  "Dragon Growth", "Monster Slaying", "Might Growth",// tt?
+				  "Dragon Growth", "Monster Slaying", "Might Growth", "Gathering",
+				  "Troop Training"
 				 ];
 	var oConstKnownValue2019 = new QuestAndTime("Dragon Growth",1576767600000);
 	//
-	var myQuests = new Cycle(aryOGCycle);
-	var ConstKnownValue = oOGConstKnownValue;//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
+	var myQuests = new Cycle(aryCycleString2019);
+	var ConstKnownValue = oConstKnownValue2019;//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
 	
 	// Biome change at "2pm vancouver,bc time" during the summer, they are UTC-7 then, so 9pm UTC
 	// Wed, 17 Oct 2018 21:00:00 GMT was start of SWAMP day
