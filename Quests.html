@@ -132,13 +132,27 @@
 	//
 	var Date_Format_Choice = 2;
 	//
-	var myQuests = new Cycle(["Construction", "Troop Training", "Monster Slaying", "Gathering", "Research", "Troop Training", "Monster Slaying","Might Growth", "Gathering", "Troop Training", "Monster Slaying"]);
-	var ConstKnownValue= new QuestAndTime("Research",1518789600000);//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
-	// "Might", 1518802310007 //fix for being on an hour interval
-	// Biome change at "2pm vancouver,bc time" durring the summer, they are UTC-7 then, so 9pm UTC
-	// Wed, 17 Oct 2018 21:00:00 GMT was start og SWAMP day
-	var myBiomes=new Cycle(["Grasslands", "Badlands", "Swamp"]);	
-	var ConstBiomeKnownValue= new QuestAndTime("Swamp",1539810000000);
+	// History: 
+	//	Original 5 minute shift time
+	//	{ Name:"Research", EpochTime:1487253600000}; //something like 2017-02-16
+	//	Hourly Mark: (Friday, February 16, 2018 2:00:00 PM UTC)
+	// 	"Might", 1518802310007 //fix for being on an hour interval
+	//	("Research",1518789600000)
+	// 	Sometime around 2019-12-19 they added a new hourly quest(dragonXP), and the rotation was all wrong
+	//	("Dragon Growth",1576767600000) //(Thursday, December 19, 2019 3:00:00 PM UTC)
+	var aryOGCycle= ["Construction", "Troop Training", "Monster Slaying", "Gathering", "Research", "Troop Training", "Monster Slaying","Might Growth", "Gathering", "Troop Training", "Monster Slaying"];
+	var oOGConstKnownValue = new QuestAndTime("Research",1518789600000);
+	//
+	var aryCycleString2019 = ["Construction", "Troop Training", "Dragon Growth", "Monster Slaying", "Might Growth", ""];
+	var oConstKnownValue2019 = new QuestAndTime("Dragon Growth",1576767600000);
+	//
+	var myQuests = new Cycle(aryOGCycle);
+	var ConstKnownValue = aryOGCycle;//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
+	
+	// Biome change at "2pm vancouver,bc time" during the summer, they are UTC-7 then, so 9pm UTC
+	// Wed, 17 Oct 2018 21:00:00 GMT was start of SWAMP day
+	var myBiomes = new Cycle(["Grasslands", "Badlands", "Swamp"]);	
+	var ConstBiomeKnownValue = new QuestAndTime("Swamp",1539810000000);
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////	
@@ -324,6 +338,7 @@
 	</table>
 <a href="?AutoUpdate=true">AutoUpdate</a> - <a href="?AutoUpdate=false">No AutoUpdate</a><br/>
 	<br/>
+	<p>2019-12-19 => Quest Cycle is changing, waiting to see the new rotation</p>
 	<table cellpadding="5" cellspacing="5" border="1px">
 		<thead style="display:none;">
 			<tr><th colspan="3">Known Value</th><tr>
