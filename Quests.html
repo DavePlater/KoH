@@ -140,11 +140,15 @@
 	//	("Research",1518789600000)
 	// 	Sometime around 2019-12-19 they added a new hourly quest(dragonXP), and the rotation was all wrong
 	//	("Dragon Growth",1576767600000) //(Thursday, December 19, 2019 3:00:00 PM UTC)
-	var aryOGCycle= ["Construction", "Troop Training", "Monster Slaying", "Gathering", "Research", "Troop Training", "Monster Slaying","Might Growth", "Gathering", "Troop Training", "Monster Slaying"];
+	var aryOGCycle= ["Construction", "Troop Training", "Monster Slaying", "Gathering", 
+			 "Research", "Troop Training", "Monster Slaying", "Might Growth", 
+			 "Gathering", "Troop Training", "Monster Slaying"];
 	var oOGConstKnownValue = new QuestAndTime("Research",1518789600000);
 	//
-	var aryCycleString2019 = ["Monster Slaying", "Construction", "Troop Training", 
-				  "Dragon Growth", "Monster Slaying", "Might Growth", "Troop Training"];
+	var aryCycleString2019 = ["Monster Slaying", "Construction", "Troop Training", "Dragon Growth", 
+				  "Monster Slaying", "Might Growth", "Troop Training", "Research",
+				  "Dragon Growth", "Monster Slaying", // TT, ??
+				 ];
 	var oConstKnownValue2019 = new QuestAndTime("Dragon Growth",1576767600000);
 	//
 	var myQuests = new Cycle(aryOGCycle);
