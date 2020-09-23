@@ -61,9 +61,9 @@ var QuestReqs =
 
 var PointValues =
 {
-	SlayerQuest: {Name:"Slayer Quest", MonsterHit:250, MonsterKill:1250, TitanHit:1500, TitanKill:45000},
-	DailyClan:{Name:"Daily Clan Quest", MonsterHit:500, MonsterKill:2500, TitanHit:3000, TitanKill:90000},
-	DragonQuest:{Name:"Dragon Quest", MonsterHit:3250, MonsterKill:16250, TitanHit:19500, TitanKill:585000},
+	SlayerQuest: { ID:"SlayerQuest", Name:"Slayer Quest", MonsterHit:250, MonsterKill:1250, TitanHit:1500, TitanKill:45000},
+	DragonQuest:{ ID:"DragonQuest", Name:"Dragon Quest", MonsterHit:3250, MonsterKill:16250, TitanHit:19500, TitanKill:585000},
+	DailyClan:{ ID:"DailyClan", Name:"Daily Clan Quest", MonsterHit:500, MonsterKill:2500, TitanHit:3000, TitanKill:90000},	
 	/*AllYouCanSlay:{Name:"All You Can Slay Quest", MonsterHit:3250, MonsterKill:16250, TitanHit:19500, TitanKill:585000}*/ //DQ renamed with bonus rewards
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -194,7 +194,7 @@ var oActivePointList=PointValues["SlayerQuest"];
 	{
 		var strResult = "";
 		var retval = [];
-		iTHLevel = iTHLevel??15);//default 15
+		iTHLevel = iTHLevel??15;//default 15
 		strWhichQuest = strWhichQuest??"SlayerQuest";
 		var oBracket = QuestReqs.getBracket(iTHLevel);
 		if(oBracket!=undefined)
@@ -205,12 +205,12 @@ var oActivePointList=PointValues["SlayerQuest"];
 				var aryPoints=oQuests[strWhichQuest];
 				if(aryPoints!=undefined && aryPoints.length==3)
 				{
-					retval.push(Math.ceil(aryPoints[0]/pts));
-					retval.push(Math.ceil(aryPoints[1]/pts));
-					retval.push(Math.ceil(aryPoints[2]/pts));
-					strResult += "[1 Star]: "+Math.ceil(aryPoints[0]/pts)+", ";
-					strResult += "[2 Star]: "+Math.ceil(aryPoints[1]/pts)+", ";
-					strResult += "[3 Star]: "+Math.ceil(aryPoints[2]/pts)+"";
+					retval.push(Math.ceil(aryPoints[0]/iPointsPerMonster));
+					retval.push(Math.ceil(aryPoints[1]/iPointsPerMonster));
+					retval.push(Math.ceil(aryPoints[2]/iPointsPerMonster));
+					strResult += "[1 Star]: "+retval[0]+", ";
+					strResult += "[2 Star]: "+retval[1]+", ";
+					strResult += "[3 Star]: "+retval[2]+"";
 				}
 			}
 		}
@@ -245,6 +245,31 @@ var oActivePointList=PointValues["SlayerQuest"];
 		retval.push(strResult);
 		return retval;
 	}
+	function ClearTable(strTableName)
+	{
+		var otbl=document.getElementById(strTableName);
+		if(otbl!=undefined)
+		{
+			otbl.innerHTML="";
+		}
+	}
+	function AddRow(strTableName, strQuest, strMonsterLevel, strHits2Kill, str1Star, str2Star, str3Star)
+	{
+		var otbl=document.getElementById(strTableName);
+		if(otbl!=undefined)
+		{
+			var str="";
+			str+="<tr>";
+			str+="<td>"+strQuest+"</td>";
+			str+="<td>"+strMonsterLevel+"</td>";
+			str+="<td>"+strHits2Kill+"</td>";
+			str+="<td>"+str1Star+"</td>";
+			str+="<td>"+str2Star+"</td>";
+			str+="<td>"+str3Star+"</td>";
+			str+="</tr>";
+			otbl.innerHTML+=str;
+		}
+	}
 	function SetRow(strTableName, strQuest, strMonsterLevel, strHits2Kill, str1Star, str2Star, str3Star)
 	{// tblMonsterData
 		var otbl=document.getElementById(strTableName);
@@ -272,9 +297,11 @@ var oActivePointList=PointValues["SlayerQuest"];
 		var iLevel=parseInt(gV("ddlMonsterLevel"));
 		var iHits=parseInt(gV("tbNumAttacks"));
 		
-		//for each quest
+		strResult="TH: "+iTHLevel+"\r\n";
+		ClearTable("tblMonsterData");
+		for(var prop in PointValues)
 		{
-			var oQuestChoice = oActivePointList;
+			var oQuestChoice = PointValues[prop];
 			strResult+="["+oQuestChoice.Name+"]\r\n";
 			strResult+="Level: "+iLevel+", ";
 			strResult+="Hits: "+iHits+", ";
@@ -284,9 +311,16 @@ var oActivePointList=PointValues["SlayerQuest"];
 			var iPointsPerMonster=(iLevel*iMH)*(iHits); //kill shot always gets hit points
 			iPointsPerMonster+=(iLevel*iMK);
 			strResult+="Points: "+iPointsPerMonster+"\r\n";
-			var aryResults=ComputeNumberForStars(iTHLevel,oQuestChoice.Name,iPointsPerMonster);
-			strResult+="\r\n"+aryResults[3];
+			var aryResults=ComputeStarsFromData(iTHLevel,oQuestChoice.ID,iPointsPerMonster);
+			strResult+=aryResults[3]+"\r\n\r\n";
+			
+			//pretend you can do 3/4/5 hits on each monster and fill in the table. 
+			//highlight the one that matches the selection maybe?
+			AddRow("tblMonsterData",oQuestChoice.Name,iLevel,iHits,aryResults[0],aryResults[1],aryResults[2]);
 		}
+		
+		
+		sV("tbOutput",strResult);	
 		
 	}
 	function old_btCalculate_click()
@@ -360,7 +394,7 @@ Points based on realm12:
 	<br/>
 	<button id="btCalculate" onclick="btCalculate_click()">Calculate</button><br/>
 	<br/>
-	<textarea id="tbOutput" cols="48" rows="12"></textarea>
+	<textarea id="tbOutput" cols="48" rows="16"></textarea>
 </div>
 <table cellpadding="5" cellspacing="5" border="1px">
 	<thead><tr><th>Quest</th><th>Monster<br/>Level</th><th>Hits to Kill</th><th>1 Star</th><th>2 Star</th><th>3 Star</th></tr></thead>
