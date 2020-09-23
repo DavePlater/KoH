@@ -40,7 +40,7 @@ var QuestReqs =
 	//_DailyClan:[10800000,26580000,53640000],//realm12 points
 	THBrackets:
 	[ 
-		{Min:25, Max:25, Quests:{DragonQuest:[722000 , 1491000 , 4755000], SlayerQuest:[6750,25000,65000], DailyClan:[10800000,26580000,53640000]} },
+		{Min:25, Max:27, Quests:{DragonQuest:[722000 , 1491000 , 4755000], SlayerQuest:[6750,25000,65000], DailyClan:[10800000,26580000,53640000]} },
 		{Min:23, Max:24, Quests:{DragonQuest:[664000 , 1327000 , 4117000], SlayerQuest:[6000,22100,60750], DailyClan:[10800000,26580000,53640000]} },
 		{Min:19, Max:22, Quests:{DragonQuest:[371000, 882000, 2540000], SlayerQuest:[4500,16900,47250], DailyClan:[10800000,26580000,53640000]}	},
 		{Min:16, Max:18, Quests:{DragonQuest:[324000,753000,2179000], SlayerQuest:[3750,14300,30750], DailyClan:[10800000,26580000,53640000]}	},
@@ -64,10 +64,10 @@ var PointValues =
 	SlayerQuest: {Name:"Slayer Quest", MonsterHit:250, MonsterKill:1250, TitanHit:1500, TitanKill:45000},
 	DailyClan:{Name:"Daily Clan Quest", MonsterHit:500, MonsterKill:2500, TitanHit:3000, TitanKill:90000},
 	DragonQuest:{Name:"Dragon Quest", MonsterHit:3250, MonsterKill:16250, TitanHit:19500, TitanKill:585000},
-	AllYouCanSlay:{Name:"All You Can Slay Quest", MonsterHit:3250, MonsterKill:16250, TitanHit:19500, TitanKill:585000}
+	/*AllYouCanSlay:{Name:"All You Can Slay Quest", MonsterHit:3250, MonsterKill:16250, TitanHit:19500, TitanKill:585000}*/ //DQ renamed with bonus rewards
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-var aryBrewCostForMonsterLevel=[0,0,0,0,0,0,0,0,0];//future plans?
+var aryBrewCostForMonsterLevel=[0,0,0,0,0,0,0,0,0,0,0,0];//future plans? Added 10|11|12 on 2020-09-23
 var oActivePointList=PointValues["SlayerQuest"];
 
 
@@ -190,6 +190,34 @@ var oActivePointList=PointValues["SlayerQuest"];
 		QuestReqsToTable(iTHLevel);
 	}
 	
+	function ComputeStarsFromData(iTHLevel, strWhichQuest, iPointsPerMonster)
+	{
+		var strResult = "";
+		var retval = [];
+		iTHLevel = iTHLevel??||15);//default 15
+		strWhichQuest = strWhichQuest??"SlayerQuest";
+		var oBracket = QuestReqs.getBracket(iTHLevel);
+		if(oBracket!=undefined)
+		{
+			var oQuests = oBracket["Quests"];
+			if(oQuests!=undefined)
+			{
+				var aryPoints=oQuests[strWhichQuest];
+				if(aryPoints!=undefined && aryPoints.length==3)
+				{
+					retval.push(Math.ceil(aryPoints[0]/pts));
+					retval.push(Math.ceil(aryPoints[1]/pts));
+					retval.push(Math.ceil(aryPoints[2]/pts));
+					strResult += "[1 Star]: "+Math.ceil(aryPoints[0]/pts)+", ";
+					strResult += "[2 Star]: "+Math.ceil(aryPoints[1]/pts)+", ";
+					strResult += "[3 Star]: "+Math.ceil(aryPoints[2]/pts)+"";
+				}
+			}
+		}
+		retval.push(strResult);
+		return retval;
+	}
+	
 	function ComputeNumberForStars(pts)
 	{
 		var strResult="";
@@ -235,6 +263,33 @@ var oActivePointList=PointValues["SlayerQuest"];
 		}
 	}
 	function btCalculate_click()
+	{
+		SaveFieldsToStorage();
+		var strResult="";
+		
+		var iTHLevel = (localStorage.getItem("THLevel")||15);//default 15
+		
+		var iLevel=parseInt(gV("ddlMonsterLevel"));
+		var iHits=parseInt(gV("tbNumAttacks"));
+		
+		//for each quest
+		{
+			var oQuestChoice = oActivePointList;
+			strResult+="["+oQuestChoice.Name+"]\r\n";
+			strResult+="Level: "+iLevel+", ";
+			strResult+="Hits: "+iHits+", ";
+			strResult+"\r\n";
+			var iMH=oQuestChoice.MonsterHit;
+			var iMK=oQuestChoice.MonsterKill;
+			var iPointsPerMonster=(iLevel*iMH)*(iHits); //kill shot always gets hit points
+			iPointsPerMonster+=(iLevel*iMK);
+			strResult+="Points: "+iPointsPerMonster+"\r\n";
+			var aryResults=ComputeNumberForStars(iTHLevel,oQuestChoice.Name,iPointsPerMonster);
+			strResult+="\r\n"+aryResults[3];
+		}
+		
+	}
+	function old_btCalculate_click()
 	{
 		SaveFieldsToStorage();
 		var strResult="";
