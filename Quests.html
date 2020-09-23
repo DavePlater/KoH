@@ -140,11 +140,13 @@
 	//	("Research",1518789600000)
 	// 	Sometime around 2019-12-19 they added a new hourly quest(dragonXP), and the rotation was all wrong
 	//	("Dragon Growth",1576767600000) //(Thursday, December 19, 2019 3:00:00 PM UTC)
+	//	Sometime around 2020-09-18 they added a new hourly quest (idolInvestment)
+	//	("Idol Investment",1600902000000) //(Wednesday, September 23, 2020 11:00:00 PM UTC)
 	var aryOGCycle= ["Construction", "Troop Training", "Monster Slaying", "Gathering", 
 			 "Research", "Troop Training", "Monster Slaying", "Might Growth", 
 			 "Gathering", "Troop Training", "Monster Slaying"];
 	var oOGConstKnownValue = new QuestAndTime("Research",1518789600000);
-	//
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// research, dragon, ms, might, tt, ms, constr, tt, dragon, ms, might, tt
 	var aryCycleString2019 = ["Monster Slaying", "Construction", "Troop Training", "Dragon Growth", 
 				  "Monster Slaying", "Might Growth", "Troop Training", "Research",
@@ -152,9 +154,17 @@
 				  "Troop Training"
 				 ];
 	var oConstKnownValue2019 = new QuestAndTime("Dragon Growth",1576767600000);
-	//
-	var myQuests = new Cycle(aryCycleString2019);
-	var ConstKnownValue = oConstKnownValue2019;//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	// dragon growth, monster slay, //?18 ->might growth, //?19 ->TT, //?20 ->research?, dragon growth, monster slay, might, gathering, troops, idol, monster slay
+	var aryCycleString202009 =  ["Monster Slaying", "Construction", "Troop Training", "Dragon Growth", 
+				     "Monster Slaying", "Might Growth", "Troop Training", "Research",
+				     "Dragon Growth", "Monster Slaying", "Might Growth", "Gathering",
+				     "Troop Training", "Idol Investment"		
+				 ]; //TODO FIX? kinda looks like Idol just got one tacked on at end
+	var oConstKnownValue2020 = new QuestAndTime("Gathering",1600894800000);
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	var myQuests = new Cycle(aryCycleString202009);//aryCycleString2019);
+	var ConstKnownValue = oConstKnownValue2020;//oConstKnownValue2019;//{ Name:"Research", EpochTime:1487253600000}; //something like 2/16/2017 
 	
 	// Biome change at "2pm vancouver,bc time" during the summer, they are UTC-7 then, so 9pm UTC
 	// Wed, 17 Oct 2018 21:00:00 GMT was start of SWAMP day
