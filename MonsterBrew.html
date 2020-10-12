@@ -103,7 +103,7 @@ var oActivePointList=PointValues["SlayerQuest"];
 		if(tblPointListings!=undefined && oPointList!=undefined)
 		{
 			var str="";
-			str+="<tr><th colspan=\"3\">"+oPointList["Name"]+"</th><td>";//<button onclick=\"btQuestSelect_Click('"+strPointValueObjectName+"')\">Select</button>
+			str+="<tr><th colspan=\"4\">"+oPointList["Name"]+"</th><td>";//<button onclick=\"btQuestSelect_Click('"+strPointValueObjectName+"')\">Select</button>
 			str+="</td></tr>\r\n";
 			str+="<tr><th>Monster Hit</th><td>"+oPointList["MonsterHit"]+"</td><th>Monster Kill</th><td>"+oPointList["MonsterKill"]+"</td></tr>\r\n";
 			str+="<tr><th>Titan Hit</th><td>"+oPointList["TitanHit"]+"</td><th>Titan Kill</th><td>"+oPointList["TitanKill"]+"</td></tr>\r\n";
@@ -359,15 +359,15 @@ var oActivePointList=PointValues["SlayerQuest"];
 </script>
 </head>
 <body onload="bodyLoad();">
-Points based on realm12:	
+	Points based on <del>realm12</del> realm10:	
 <table id="tblBig" border="0" cellspacing="2" cellpadding="5" >
 	<tr>
-		<td valign="top"><table id="tblPointListings" border="1" cellspacing="2" cellpadding="5">	</table></td>
 		<td valign="top">
 			<table id="tblQuestReqs" border="1" cellspacing="2" cellpadding="5" style="min-width:400px;">	
 				<thead><tr><th>TH</th><td colspan="2"><input type="text" id="tbTHNumber" /> <button id="btSetTH" onclick="btSetTHclick()">Set</button></td></tr></thead>
 			</table>
 		</td>
+		<td valign="top"><table id="tblPointListings" border="1" cellspacing="2" cellpadding="5">	</table></td>
 	</tr>
 </table>	
 <br/>
