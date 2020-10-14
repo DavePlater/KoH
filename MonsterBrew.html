@@ -41,9 +41,9 @@ var QuestReqs =
 		//{Min:13, Max:15, Quests:{DragonQuest:[240000,587000,882000], SlayerQuest:[3000,10675,23750], DailyClan:[10800000,26580000,53640000]}	},
 		{Min:13, Max:15, Quests:{DragonQuest:[371000,882000,2540000], SlayerQuest:[4500,16900,47250], DailyClan:[10800000,26580000,53640000]}	},
 		{Min:10, Max:12, Quests:{DragonQuest:[], SlayerQuest:[], DailyClan:[10800000,26580000,53640000]}	},
-		{Min:07, Max:09, Quests:{DragonQuest:[], SlayerQuest:[], DailyClan:[10800000,26580000,53640000]}	},
-		{Min:04, Max:06, Quests:{DragonQuest:[], SlayerQuest:[], DailyClan:[10800000,26580000,53640000]}	},
-		{Min:01, Max:03, Quests:{DragonQuest:[], SlayerQuest:[], DailyClan:[10800000,26580000,53640000]}	}
+		{Min: 7, Max: 9, Quests:{DragonQuest:[], SlayerQuest:[], DailyClan:[10800000,26580000,53640000]}	},
+		{Min: 4, Max: 6, Quests:{DragonQuest:[], SlayerQuest:[], DailyClan:[10800000,26580000,53640000]}	},
+		{Min: 1, Max: 3, Quests:{DragonQuest:[], SlayerQuest:[], DailyClan:[10800000,26580000,53640000]}	}
 	],
 	getBracket:function(THLevel) //loop through THBrackets and find where >=min and <= Max
 	{ 
@@ -190,8 +190,10 @@ var oActivePointList=PointValues["SlayerQuest"];
 	{
 		var strResult = "";
 		var retval = [];
-		iTHLevel = iTHLevel??=15;//default 15
-		strWhichQuest = strWhichQuest??="SlayerQuest";
+		if(iTHLevel==undefined){iTHLevel=15;}
+		if(strWhichQuest ==undefined){strWhichQuest ="SlayerQuest";}
+		//iTHLevel = iTHLevel??15;//default 15
+		//strWhichQuest = strWhichQuest??"SlayerQuest";
 		var oBracket = QuestReqs.getBracket(iTHLevel);
 		if(oBracket!=undefined)
 		{
